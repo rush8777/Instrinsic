@@ -16,6 +16,7 @@ import {
   Play
 } from "lucide-react";
 import { NetworkAnimation } from "@/components/scale/NetworkAnimation";
+import { LogoMarquee } from "@/components/scale/LogoMarquee";
 
 const Index = () => {
   return (
@@ -88,20 +89,7 @@ const Index = () => {
       </section>
 
       {/* Logos Section */}
-      <section className="py-12 border-t border-border">
-        <div className="max-w-7xl mx-auto px-4 md:px-6">
-          <p className="text-sm text-muted-foreground text-center mb-8">
-            Trusted by leading enterprises worldwide
-          </p>
-          <div className="flex flex-wrap items-center justify-center gap-x-12 gap-y-6 opacity-60">
-            {["OpenAI", "Microsoft", "Google", "Amazon", "Meta", "NVIDIA"].map((company) => (
-              <span key={company} className="text-lg font-medium text-muted-foreground">
-                {company}
-              </span>
-            ))}
-          </div>
-        </div>
-      </section>
+      <LogoMarquee />
 
       {/* Features Section */}
       <Section>
