@@ -67,7 +67,7 @@ export function ScaleFooter({ logo, columns = defaultColumns, className }: Foote
           <div className="col-span-2 md:col-span-1">
             {logo || (
               <a href="/" className="text-xl font-semibold text-foreground">
-                nexus<span className="gradient-text">AI</span>
+                Prompt<span className="gradient-text">IT</span>
               </a>
             )}
             <p className="mt-4 text-sm text-muted-foreground leading-relaxed">
@@ -118,7 +118,7 @@ export function ScaleFooter({ logo, columns = defaultColumns, className }: Foote
         {/* Bottom Bar */}
         <div className="mt-12 pt-8 border-t border-border flex flex-col md:flex-row items-center justify-between gap-4">
           <p className="text-sm text-muted-foreground">
-            © {new Date().getFullYear()} NexusAI, Inc. All rights reserved.
+            © {new Date().getFullYear()} PromptIT, Inc. All rights reserved.
           </p>
           <div className="flex items-center gap-6">
             <a href="#" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
@@ -141,10 +141,10 @@ export function MinimalFooter({ className }: { className?: string }) {
       <div className="max-w-7xl mx-auto px-4 md:px-6 py-6">
         <div className="flex flex-col md:flex-row items-center justify-between gap-4">
           <a href="/" className="text-lg font-semibold text-foreground">
-            nexus<span className="gradient-text">AI</span>
+            Prompt<span className="gradient-text">IT</span>
           </a>
           <p className="text-sm text-muted-foreground">
-            © {new Date().getFullYear()} NexusAI, Inc. All rights reserved.
+            © {new Date().getFullYear()} PromptIT, Inc. All rights reserved.
           </p>
           <div className="flex items-center gap-4">
             <a href="#" className="text-muted-foreground hover:text-foreground transition-colors">
