@@ -15,7 +15,7 @@ import {
   ArrowRight,
   Play
 } from "lucide-react";
-import heroDashboard from "@/assets/hero-dashboard.png";
+import { NetworkAnimation } from "@/components/scale/NetworkAnimation";
 
 const Index = () => {
   return (
@@ -63,15 +63,26 @@ const Index = () => {
           </div>
           
           {/* Hero Visual */}
-          <div className="mt-20 relative">
-            <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent z-10 pointer-events-none" />
-            <GlassCard className="max-w-5xl mx-auto overflow-hidden p-0">
-              <img 
-                src={heroDashboard} 
-                alt="AI Neural Network Visualization" 
-                className="w-full h-auto object-cover rounded-xl"
-              />
-            </GlassCard>
+          <div className="mt-16 relative">
+            <div className="grid md:grid-cols-2 gap-8 items-center max-w-5xl mx-auto">
+              {/* Left - Network Animation */}
+              <GlassCard className="overflow-hidden p-0 aspect-square max-w-sm">
+                <NetworkAnimation className="rounded-xl" />
+              </GlassCard>
+              
+              {/* Right - Text Content */}
+              <div className="space-y-4">
+                <h3 className="text-xl md:text-2xl font-medium text-foreground">
+                  Intelligent Neural Networks
+                </h3>
+                <p className="text-muted-foreground leading-relaxed">
+                  Our advanced neural network architecture adapts in real-time, learning from billions of data points to deliver unprecedented accuracy. Watch as connections form and evolve, mirroring the dynamic nature of human thought.
+                </p>
+                <p className="text-muted-foreground leading-relaxed">
+                  Built on cutting-edge transformer technology, Scale AI processes complex patterns across multiple domains simultaneously, enabling breakthrough performance in natural language, vision, and multimodal understanding.
+                </p>
+              </div>
+            </div>
           </div>
         </div>
       </section>
