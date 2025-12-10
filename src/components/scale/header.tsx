@@ -64,7 +64,7 @@ export function ScaleHeader({ logo, navItems = defaultNavItems, className }: Hea
             <div className="flex-shrink-0">
               {logo || (
                 <a href="/" className="text-xl font-semibold text-foreground">
-                  nexus<span className="gradient-text">AI</span>
+                  Prompt<span className="gradient-text">IT</span>
                 </a>
               )}
             </div>
@@ -164,7 +164,7 @@ export function SimpleHeader({ logo, className }: { logo?: React.ReactNode; clas
         <div className="flex items-center justify-between h-16">
           {logo || (
             <a href="/" className="text-xl font-semibold text-foreground">
-              nexus<span className="gradient-text">AI</span>
+              Prompt<span className="gradient-text">IT</span>
             </a>
           )}
           <div className="flex items-center gap-4">
