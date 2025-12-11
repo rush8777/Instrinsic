@@ -3,7 +3,7 @@ import type { ReactNode } from "react"
 
 interface BadgeProps {
   children: ReactNode
-  variant?: "default" | "outline" | "muted" | "gradient"
+  variant?: "default" | "outline" | "muted" | "gradient" | "error" | "success"
   className?: string
 }
 
@@ -13,6 +13,8 @@ export function ScaleBadge({ children, variant = "default", className }: BadgePr
     outline: "border border-border bg-transparent text-foreground",
     muted: "bg-muted text-muted-foreground",
     gradient: "bg-gradient-to-r from-[#a78bfa]/20 to-[#60a5fa]/20 text-foreground border border-[#a78bfa]/30",
+    error: "bg-destructive/20 text-destructive border border-destructive/30",
+    success: "bg-emerald-500/20 text-emerald-400 border border-emerald-500/30",
   }
 
   return (

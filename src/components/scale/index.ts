@@ -21,3 +21,9 @@ export * from "./badges"
 
 // Inputs
 export * from "./inputs"
+
+// Avatar
+export * from "./avatar"
+
+// Icon with Background
+export * from "./icon-with-background"
