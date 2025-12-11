@@ -1,27 +1,125 @@
+"use client"
+
 import type React from "react"
-import { useState } from "react"
+import { useState, useEffect, useRef } from "react"
+
+// Import from your components/scale folder
 import { H2, H3, Body } from "@/components/scale/typography"
 import { ScaleButton, IconButton } from "@/components/scale/buttons"
 import { ScaleCard, HighlightCard } from "@/components/scale/cards"
-import { ScaleBadge } from "@/components/scale/badges"
-import { ScaleAvatar } from "@/components/scale/avatar"
 import { IconWithBackground } from "@/components/scale/icon-with-background"
-import { NetworkAnimation } from "@/components/scale/NetworkAnimation"
-import {
-  Coins,
-  Settings,
-  Building,
-  Compass,
-  MapPin,
-  Bookmark,
-  ArrowRight,
-  MoreHorizontal,
-  Plus,
-  Layers,
-  Zap,
-} from "lucide-react"
+import { Coins, Settings, Building, Compass, MapPin, Bookmark, MoreHorizontal, Plus, Layers, Zap } from "lucide-react"
 
-// Job Card Component
+// ============================================
+// NETWORK ANIMATION COMPONENT (INLINE)
+// ============================================
+interface Particle {
+  x: number
+  y: number
+  vx: number
+  vy: number
+  radius: number
+}
+
+function NetworkAnimation({ className }: { className?: string }) {
+  const canvasRef = useRef<HTMLCanvasElement>(null)
+  const particlesRef = useRef<Particle[]>([])
+  const animationRef = useRef<number>()
+
+  useEffect(() => {
+    const canvas = canvasRef.current
+    if (!canvas) return
+
+    const ctx = canvas.getContext("2d")
+    if (!ctx) return
+
+    const resizeCanvas = () => {
+      const parent = canvas.parentElement
+      if (parent) {
+        canvas.width = parent.offsetWidth
+        canvas.height = parent.offsetHeight
+      }
+    }
+
+    resizeCanvas()
+    window.addEventListener("resize", resizeCanvas)
+
+    // Initialize particles
+    const particleCount = 40
+    particlesRef.current = Array.from({ length: particleCount }, () => ({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height,
+      vx: (Math.random() - 0.5) * 0.5,
+      vy: (Math.random() - 0.5) * 0.5,
+      radius: Math.random() * 2 + 1,
+    }))
+
+    const animate = () => {
+      if (!canvas || !ctx) return
+
+      ctx.clearRect(0, 0, canvas.width, canvas.height)
+
+      const particles = particlesRef.current
+
+      // Update and draw particles
+      particles.forEach((particle) => {
+        particle.x += particle.vx
+        particle.y += particle.vy
+
+        // Bounce off walls
+        if (particle.x < 0 || particle.x > canvas.width) particle.vx *= -1
+        if (particle.y < 0 || particle.y > canvas.height) particle.vy *= -1
+
+        // Draw particle
+        ctx.beginPath()
+        ctx.arc(particle.x, particle.y, particle.radius, 0, Math.PI * 2)
+        ctx.fillStyle = "rgba(168, 85, 247, 0.4)"
+        ctx.fill()
+      })
+
+      // Draw connections
+      particles.forEach((particle, i) => {
+        particles.slice(i + 1).forEach((other) => {
+          const dx = particle.x - other.x
+          const dy = particle.y - other.y
+          const distance = Math.sqrt(dx * dx + dy * dy)
+
+          if (distance < 120) {
+            ctx.beginPath()
+            ctx.moveTo(particle.x, particle.y)
+            ctx.lineTo(other.x, other.y)
+            ctx.strokeStyle = `rgba(168, 85, 247, ${0.15 * (1 - distance / 120)})`
+            ctx.lineWidth = 1
+            ctx.stroke()
+          }
+        })
+      })
+
+      animationRef.current = requestAnimationFrame(animate)
+    }
+
+    animate()
+
+    return () => {
+      window.removeEventListener("resize", resizeCanvas)
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current)
+      }
+    }
+  }, [])
+
+  return (
+    <canvas
+      ref={canvasRef}
+      className={`absolute inset-0 pointer-events-none ${className || ""}`}
+      style={{ opacity: 0.6 }}
+    />
+  )
+}
+
+// ============================================
+// JOB CARD COMPONENT
+// ============================================
 function JobCard({
   icon,
   company,
@@ -63,36 +161,9 @@ function JobCard({
   )
 }
 
-// Application Card Component
-function ApplicationCard() {
-  return (
-    <ScaleCard className="flex flex-col gap-6">
-      <H3>I've applied to</H3>
-      <div className="flex flex-col gap-2 rounded-lg bg-secondary p-3">
-        <div className="flex items-center gap-1">
-          <span className="flex-1 text-xs text-muted-foreground font-medium">Applied Oct 8</span>
-          <ScaleBadge variant="error">On hold</ScaleBadge>
-        </div>
-        <div className="flex items-center gap-3">
-          <ScaleAvatar
-            src="https://res.cloudinary.com/subframe/image/upload/v1723780611/uploads/302/lbaowphtt6gfvgjr10b4.png"
-            square
-          />
-          <div className="flex flex-1 flex-col">
-            <span className="text-sm font-semibold text-foreground">Subframe</span>
-            <span className="text-xs text-muted-foreground">Product Designer</span>
-          </div>
-          <ArrowRight className="w-5 h-5 text-muted-foreground" />
-        </div>
-      </div>
-      <ScaleButton variant="secondary" className="w-full">
-        View all applications
-      </ScaleButton>
-    </ScaleCard>
-  )
-}
-
-// Create Project Card Component
+// ============================================
+// CREATE PROJECT CARD COMPONENT
+// ============================================
 function CreateProjectCard({ onClick }: { onClick?: () => void }) {
   return (
     <button
@@ -109,7 +180,9 @@ function CreateProjectCard({ onClick }: { onClick?: () => void }) {
   )
 }
 
-// Quick Action Card using HighlightCard
+// ============================================
+// QUICK ACTION CARD COMPONENT
+// ============================================
 function QuickActionCard({
   title,
   buttonText,
@@ -131,6 +204,9 @@ function QuickActionCard({
   )
 }
 
+// ============================================
+// MAIN DASHBOARD COMPONENT
+// ============================================
 export default function Dashboard() {
   const [referralLink] = useState("https://app.scale.com/ref/abc123xyz")
 
@@ -162,9 +238,9 @@ export default function Dashboard() {
           <div className="relative z-10 flex flex-1 min-w-[200px] flex-col gap-2 py-2 pr-4">
             <div className="flex flex-col">
               <span className="text-xs font-semibold text-foreground/70">Welcome to</span>
-              <span className="text-xl font-semibold text-foreground">Prompt<span className="gradient-text">IT</span></span>
+              <span className="text-xl font-semibold text-foreground">Scale AI</span>
             </div>
-            <Body className="text-foreground/70 text-sm">Full access to AI tools and career help.</Body>
+            <Body className="text-foreground/70 text-sm">Full access to job openings and career help.</Body>
           </div>
 
           <QuickActionCard title="Find your next gig" buttonText="Browse jobs" />
@@ -172,7 +248,7 @@ export default function Dashboard() {
           <QuickActionCard title="Refer & earn" buttonText="Earn today" />
         </div>
 
-        {/* Your Projects */}
+        {/* Projects Grid */}
         <div className="flex flex-col gap-6">
           <div className="flex items-center gap-2">
             <H2 className="flex-1">Your Projects</H2>
