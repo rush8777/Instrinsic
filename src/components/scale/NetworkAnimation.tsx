@@ -1,115 +1,103 @@
-import { useEffect, useRef } from "react";
+"use client"
 
-interface Node {
-  x: number;
-  y: number;
-  vx: number;
-  vy: number;
-  radius: number;
+import { useEffect, useRef } from "react"
+
+interface Dot {
+  x: number
+  y: number
+  vx: number
+  vy: number
 }
 
-export const NetworkAnimation = ({ className = "" }: { className?: string }) => {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const animationRef = useRef<number>();
-  const nodesRef = useRef<Node[]>([]);
+export function NetworkAnimation({ className }: { className?: string }) {
+  const canvasRef = useRef<HTMLCanvasElement>(null)
 
   useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
+    const canvas = canvasRef.current
+    if (!canvas) return
 
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
+    const ctx = canvas.getContext("2d")
+    if (!ctx) return
 
-    const resizeCanvas = () => {
-      const rect = canvas.getBoundingClientRect();
-      canvas.width = rect.width * window.devicePixelRatio;
-      canvas.height = rect.height * window.devicePixelRatio;
-      ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
-    };
+    let animationId: number
+    let dots: Dot[] = []
+    const numDots = 40
+    const connectionDistance = 120
+    const dotRadius = 2
 
-    resizeCanvas();
-    window.addEventListener("resize", resizeCanvas);
+    const resize = () => {
+      canvas.width = canvas.offsetWidth * window.devicePixelRatio
+      canvas.height = canvas.offsetHeight * window.devicePixelRatio
+      ctx.scale(window.devicePixelRatio, window.devicePixelRatio)
+    }
 
-    // Initialize nodes
-    const nodeCount = 25;
-    nodesRef.current = Array.from({ length: nodeCount }, () => ({
-      x: Math.random() * canvas.width / window.devicePixelRatio,
-      y: Math.random() * canvas.height / window.devicePixelRatio,
-      vx: (Math.random() - 0.5) * 0.5,
-      vy: (Math.random() - 0.5) * 0.5,
-      radius: Math.random() * 3 + 2,
-    }));
+    const initDots = () => {
+      dots = []
+      for (let i = 0; i < numDots; i++) {
+        dots.push({
+          x: Math.random() * canvas.offsetWidth,
+          y: Math.random() * canvas.offsetHeight,
+          vx: (Math.random() - 0.5) * 0.5,
+          vy: (Math.random() - 0.5) * 0.5,
+        })
+      }
+    }
 
     const animate = () => {
-      const width = canvas.width / window.devicePixelRatio;
-      const height = canvas.height / window.devicePixelRatio;
+      ctx.clearRect(0, 0, canvas.offsetWidth, canvas.offsetHeight)
 
-      ctx.clearRect(0, 0, width, height);
+      // Update and draw dots
+      dots.forEach((dot, i) => {
+        // Update position
+        dot.x += dot.vx
+        dot.y += dot.vy
 
-      // Update and draw nodes
-      nodesRef.current.forEach((node) => {
-        node.x += node.vx;
-        node.y += node.vy;
+        // Bounce off edges
+        if (dot.x < 0 || dot.x > canvas.offsetWidth) dot.vx *= -1
+        if (dot.y < 0 || dot.y > canvas.offsetHeight) dot.vy *= -1
 
-        // Bounce off walls
-        if (node.x < 0 || node.x > width) node.vx *= -1;
-        if (node.y < 0 || node.y > height) node.vy *= -1;
+        // Draw connections
+        for (let j = i + 1; j < dots.length; j++) {
+          const other = dots[j]
+          const dx = dot.x - other.x
+          const dy = dot.y - other.y
+          const distance = Math.sqrt(dx * dx + dy * dy)
 
-        // Draw node
-        ctx.beginPath();
-        ctx.arc(node.x, node.y, node.radius, 0, Math.PI * 2);
-        ctx.fillStyle = "hsl(263, 70%, 60%)";
-        ctx.fill();
-
-        // Glow effect
-        ctx.beginPath();
-        ctx.arc(node.x, node.y, node.radius + 4, 0, Math.PI * 2);
-        const gradient = ctx.createRadialGradient(
-          node.x, node.y, node.radius,
-          node.x, node.y, node.radius + 8
-        );
-        gradient.addColorStop(0, "hsla(263, 70%, 60%, 0.3)");
-        gradient.addColorStop(1, "hsla(263, 70%, 60%, 0)");
-        ctx.fillStyle = gradient;
-        ctx.fill();
-      });
-
-      // Draw connections
-      nodesRef.current.forEach((nodeA, i) => {
-        nodesRef.current.slice(i + 1).forEach((nodeB) => {
-          const dx = nodeA.x - nodeB.x;
-          const dy = nodeA.y - nodeB.y;
-          const distance = Math.sqrt(dx * dx + dy * dy);
-
-          if (distance < 120) {
-            ctx.beginPath();
-            ctx.moveTo(nodeA.x, nodeA.y);
-            ctx.lineTo(nodeB.x, nodeB.y);
-            ctx.strokeStyle = `hsla(263, 70%, 60%, ${0.4 * (1 - distance / 120)})`;
-            ctx.lineWidth = 1;
-            ctx.stroke();
+          if (distance < connectionDistance) {
+            const opacity = (1 - distance / connectionDistance) * 0.15
+            ctx.beginPath()
+            ctx.strokeStyle = `rgba(168, 85, 247, ${opacity})`
+            ctx.lineWidth = 1
+            ctx.moveTo(dot.x, dot.y)
+            ctx.lineTo(other.x, other.y)
+            ctx.stroke()
           }
-        });
-      });
+        }
 
-      animationRef.current = requestAnimationFrame(animate);
-    };
+        // Draw dot
+        ctx.beginPath()
+        ctx.fillStyle = "rgba(168, 85, 247, 0.4)"
+        ctx.arc(dot.x, dot.y, dotRadius, 0, Math.PI * 2)
+        ctx.fill()
+      })
 
-    animate();
+      animationId = requestAnimationFrame(animate)
+    }
+
+    resize()
+    initDots()
+    animate()
+
+    window.addEventListener("resize", () => {
+      resize()
+      initDots()
+    })
 
     return () => {
-      window.removeEventListener("resize", resizeCanvas);
-      if (animationRef.current) {
-        cancelAnimationFrame(animationRef.current);
-      }
-    };
-  }, []);
+      cancelAnimationFrame(animationId)
+      window.removeEventListener("resize", resize)
+    }
+  }, [])
 
-  return (
-    <canvas
-      ref={canvasRef}
-      className={`w-full h-full ${className}`}
-      style={{ display: "block" }}
-    />
-  );
-};
+  return <canvas ref={canvasRef} className={`absolute inset-0 w-full h-full pointer-events-none ${className || ""}`} />
+}
