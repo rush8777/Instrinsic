@@ -36,6 +36,10 @@
 
     --radius: 0.75rem;
 
+    --brand-50: 263 80% 97%;
+    --brand-100: 263 70% 93%;
+    --brand-800: 263 70% 25%;
+
     --sidebar-background: 0 0% 98%;
     --sidebar-foreground: 240 5.3% 26.1%;
     --sidebar-primary: 240 5.9% 10%;
