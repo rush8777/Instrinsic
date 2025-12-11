@@ -8,6 +8,7 @@ import { H2, H3, Body } from "@/components/scale/typography"
 import { ScaleButton, IconButton } from "@/components/scale/buttons"
 import { ScaleCard, HighlightCard } from "@/components/scale/cards"
 import { IconWithBackground } from "@/components/scale/icon-with-background"
+import { ScaleHeader } from "@/components/scale/header"
 import { Coins, Settings, Building, Compass, MapPin, Bookmark, MoreHorizontal, Plus, Layers, Zap } from "lucide-react"
 
 // ============================================
@@ -212,6 +213,8 @@ export default function Dashboard() {
 
   return (
     <div className="min-h-screen bg-background">
+      <ScaleHeader />
+
       <div className="flex flex-col gap-12 px-6 md:px-12 py-12 max-w-7xl mx-auto">
         {/* Header */}
         <div className="flex flex-wrap items-center gap-4">
