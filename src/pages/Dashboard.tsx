@@ -9,6 +9,7 @@ import { ScaleButton, IconButton } from "@/components/scale/buttons"
 import { ScaleCard, HighlightCard } from "@/components/scale/cards"
 import { IconWithBackground } from "@/components/scale/icon-with-background"
 import { ScaleHeader } from "@/components/scale/header"
+import { ScaleFooter } from "@/components/scale/footer"
 import { Coins, Settings, Building, Compass, MapPin, Bookmark, MoreHorizontal, Plus, Layers, Zap } from "lucide-react"
 
 // ============================================
@@ -212,10 +213,10 @@ export default function Dashboard() {
   const [referralLink] = useState("https://app.scale.com/ref/abc123xyz")
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background flex flex-col">
       <ScaleHeader />
 
-      <div className="flex flex-col gap-12 px-6 md:px-12 py-12 max-w-7xl mx-auto">
+      <div className="flex-1 flex flex-col gap-12 px-6 md:px-12 py-12 pb-24 max-w-7xl mx-auto w-full">
         {/* Header */}
         <div className="flex flex-wrap items-center gap-4">
           <h1 className="flex-1 text-4xl font-semibold text-foreground">Hi, Alex!</h1>
@@ -304,7 +305,13 @@ export default function Dashboard() {
             <CreateProjectCard onClick={() => console.log("Create new project")} />
           </div>
         </div>
+
+        {/* Spacer div for extra bottom space */}
+        <div className="flex-1 min-h-[120px]" />
       </div>
+
+      {/* Scale Footer */}
+      <ScaleFooter />
     </div>
   )
 }
