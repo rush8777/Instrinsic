@@ -11,7 +11,7 @@ import { H1, H3, Body, Caption } from "@/components/scale/typography"
 import { ScaleButton } from "@/components/scale/buttons"
 import { ScaleCard, HighlightCard } from "@/components/scale/cards"
 import { ScaleBadge } from "@/components/scale/badges"
-import { NetworkAnimation } from "@/components/scale/network-animation"
+import { NetworkAnimation } from "@/components/scale/NetworkAnimation"
 
 // Billing Toggle Component
 function BillingToggle({

@@ -10,6 +10,7 @@ import { ScaleCard, HighlightCard } from "@/components/scale/cards"
 import { IconWithBackground } from "@/components/scale/icon-with-background"
 import { ScaleHeader } from "@/components/scale/header"
 import { ScaleFooter } from "@/components/scale/footer"
+import { CreateProjectWizard } from "@/components/scale/CreateProjectWizard"
 import { Coins, Settings, Building, Compass, MapPin, Bookmark, MoreHorizontal, Plus, Layers, Zap } from "lucide-react"
 
 // ============================================
@@ -211,6 +212,7 @@ function QuickActionCard({
 // ============================================
 export default function Dashboard() {
   const [referralLink] = useState("https://app.scale.com/ref/abc123xyz")
+  const [wizardOpen, setWizardOpen] = useState(false)
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
@@ -302,13 +304,16 @@ export default function Dashboard() {
               salary="$190k/yr"
               location="Seattle, WA"
             />
-            <CreateProjectCard onClick={() => console.log("Create new project")} />
+            <CreateProjectCard onClick={() => setWizardOpen(true)} />
           </div>
         </div>
 
         {/* Spacer div for extra bottom space */}
         <div className="flex-1 min-h-[120px]" />
       </div>
+
+      {/* Create Project Wizard */}
+      <CreateProjectWizard open={wizardOpen} onOpenChange={setWizardOpen} />
 
       {/* Scale Footer */}
       <ScaleFooter />
