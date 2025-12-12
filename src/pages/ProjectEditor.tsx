@@ -81,7 +81,7 @@ export default function ProjectEditor() {
       <ScaleHeader />
 
       {/* Main Content - Fixed height, no scroll */}
-      <div className="flex flex-col flex-1 max-w-7xl mx-auto w-full border-x border-border overflow-hidden">
+      <div className="flex flex-1 overflow-hidden max-w-7xl mx-auto w-full border-x border-border">
         <div className="flex flex-1 overflow-hidden">
           {/* Channel Navigation Sidebar - Fixed */}
           <div 
