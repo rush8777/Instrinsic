@@ -340,8 +340,8 @@ export default function ProjectEditor() {
         </div>
         </div>
         {/* Footer - Spans full width at bottom */}
-        <ScaleFooter className="border-t border-border flex-shrink-0" />
       </div>
+      <ScaleFooter className="border-t border-border flex-shrink-0" />
     </div>
   )
 }
