@@ -7,7 +7,7 @@ import { ScaleBadge } from "@/components/scale/badges"
 import { ChatChannelsMenu } from "@/components/scale/ChatChannelsMenu"
 import { ChatMessage } from "@/components/scale/ChatMessage"
 import { ChatInput } from "@/components/scale/ChatInput"
-import { ScaleHeader } from "@/components/scale/header"
+
 
 import {
   ChevronDown,
@@ -78,7 +78,7 @@ export default function ProjectEditor() {
   return (
     <div className="flex flex-col h-screen bg-background overflow-hidden">
       {/* Header - Fixed */}
-      <ScaleHeader />
+      
 
       {/* Main Content - Fixed height, no scroll */}
       <div className="flex flex-1 overflow-hidden">
