@@ -1,4 +1,4 @@
-"use client"
+"// Project Editor Page"
 
 import React, { useState } from "react"
 import { ScaleAvatar } from "@/components/scale/avatar"
