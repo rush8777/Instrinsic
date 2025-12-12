@@ -342,7 +342,7 @@ export default function ProjectEditor() {
         </div>
         {/* Footer - Spans full width at bottom */}
       </div>
-      <ScaleFooter className="border-t border-border flex-shrink-0" />
+      
     </div>
   )
 }
