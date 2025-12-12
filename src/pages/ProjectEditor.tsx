@@ -78,7 +78,7 @@ export default function ProjectEditor() {
   return (
     <div className="flex flex-col min-h-screen bg-background">
       {/* Header */}
-      <SimpleHeader />
+      <ScaleHeader />
 
       {/* Main Content */}
       <div className="flex flex-1 max-w-7xl mx-auto w-full border-x border-border">
@@ -340,7 +340,7 @@ export default function ProjectEditor() {
       </div>
 
       {/* Footer */}
-      <MinimalFooter />
+      <ScaleFooter />
     </div>
   )
 }
