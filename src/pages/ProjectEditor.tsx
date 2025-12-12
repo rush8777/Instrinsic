@@ -7,8 +7,8 @@ import { ScaleBadge } from "@/components/scale/badges"
 import { ChatChannelsMenu } from "@/components/scale/ChatChannelsMenu"
 import { ChatMessage } from "@/components/scale/ChatMessage"
 import { ChatInput } from "@/components/scale/ChatInput"
-import { SimpleHeader } from "@/components/scale/header"
-import { MinimalFooter } from "@/components/scale/footer"
+import { ScaleHeader } from "@/components/scale/header"
+import { ScaleFooter } from "@/components/scale/footer"
 import {
   ChevronDown,
   Search,
