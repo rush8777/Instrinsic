@@ -133,13 +133,6 @@ export function CreateProjectWizard({ open, onOpenChange }: CreateProjectWizardP
         <DialogOverlay className="bg-background/80 backdrop-blur-sm" />
         <DialogContent className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-2xl max-h-[90vh] p-0 border-0 bg-transparent shadow-none">
           <div className="flex flex-col gap-8 bg-card rounded-2xl border border-border p-8 md:p-12 shadow-2xl">
-            {/* Close Button */}
-            <button
-              onClick={handleClose}
-              className="absolute top-4 right-4 p-2 rounded-full hover:bg-muted transition-colors"
-            >
-              <X className="w-5 h-5 text-muted-foreground" />
-            </button>
 
             {/* Logo */}
             <div className="flex justify-center">
