@@ -81,13 +81,14 @@ export default function ProjectEditor() {
       <ScaleHeader />
 
       {/* Main Content - Fixed height, no scroll */}
-      <div className="flex flex-1 max-w-7xl mx-auto w-full border-x border-border overflow-hidden">
-        {/* Channel Navigation Sidebar - Fixed */}
-        <div 
-          className={`hidden md:flex flex-col bg-muted/30 border-r border-border transition-all duration-300 overflow-y-auto ${
-            sidebarCollapsed ? "w-14" : "w-64"
-          }`}
-        >
+      <div className="flex flex-col flex-1 max-w-7xl mx-auto w-full border-x border-border overflow-hidden">
+        <div className="flex flex-1 overflow-hidden">
+          {/* Channel Navigation Sidebar - Fixed */}
+          <div 
+            className={`hidden md:flex flex-col bg-muted/30 border-r border-border transition-all duration-300 overflow-y-auto ${
+              sidebarCollapsed ? "w-14" : "w-64"
+            }`}
+          >
           {/* Sidebar Header */}
           <div className="flex items-center gap-2 p-3 border-b border-border">
             {!sidebarCollapsed && (
@@ -337,8 +338,9 @@ export default function ProjectEditor() {
             <ChatInput onSend={handleSendMessage} placeholder="Message #design" />
           </div>
         </div>
-        {/* Footer - Inside main content area */}
-        <ScaleFooter className="border-t border-border" />
+        </div>
+        {/* Footer - Spans full width at bottom */}
+        <ScaleFooter className="border-t border-border flex-shrink-0" />
       </div>
     </div>
   )
