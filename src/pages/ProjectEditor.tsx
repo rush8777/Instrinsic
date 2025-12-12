@@ -337,10 +337,9 @@ export default function ProjectEditor() {
             <ChatInput onSend={handleSendMessage} placeholder="Message #design" />
           </div>
         </div>
+        {/* Footer - Inside main content area */}
+        <ScaleFooter className="border-t border-border" />
       </div>
-
-      {/* Footer */}
-      <ScaleFooter />
     </div>
   )
 }
