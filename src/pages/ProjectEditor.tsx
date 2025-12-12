@@ -253,9 +253,9 @@ export default function ProjectEditor() {
         </div>
 
         {/* Main Chat Area */}
-        <div className="flex flex-1 flex-col min-w-0">
-          {/* Channel Header */}
-          <div className="flex items-center gap-3 border-b border-border px-4 py-3">
+        <div className="flex flex-1 flex-col min-w-0 relative">
+          {/* Channel Header - Fixed */}
+          <div className="flex items-center gap-3 border-b border-border px-4 py-3 bg-background sticky top-0 z-10">
             <div className="flex items-center gap-2">
               <div className="flex items-center justify-center rounded-md border border-border bg-card p-1">
                 <Hash className="w-3.5 h-3.5 text-muted-foreground" />
@@ -278,8 +278,8 @@ export default function ProjectEditor() {
             </IconButton>
           </div>
 
-          {/* Messages Area */}
-          <div className="flex-1 overflow-y-auto px-4 py-4 scrollbar-thin">
+          {/* Messages Area - Scrollable */}
+          <div className="flex-1 overflow-y-auto px-4 py-4 pb-28 scrollbar-thin">
             {messages.map((msg) => (
               <ChatMessage
                 key={msg.id}
@@ -332,8 +332,8 @@ export default function ProjectEditor() {
             ))}
           </div>
 
-          {/* Message Input */}
-          <div className="px-4 pb-4">
+          {/* Message Input - Floating */}
+          <div className="absolute bottom-4 left-4 right-4 z-10">
             <ChatInput onSend={handleSendMessage} placeholder="Message #design" />
           </div>
         </div>
