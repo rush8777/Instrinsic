@@ -80,23 +80,6 @@ export default function ProjectEditor() {
 
   return (
     <div className="flex h-screen w-full bg-background">
-      {/* Left Workspace Sidebar */}
-      <div className="hidden md:flex flex-col items-center gap-2 bg-muted/50 py-4 px-2">
-        {workspaces.map((workspace) => (
-          <div key={workspace.id} className="flex items-center justify-center gap-2 py-2">
-            {workspace.active && (
-              <div className="w-2.5 h-2.5 rounded-full bg-violet-500" />
-            )}
-            <ScaleAvatar
-              src={workspace.image}
-              size="lg"
-              square
-              className={workspace.active ? "ring-2 ring-violet-500 shadow-lg" : ""}
-            />
-            {!workspace.active && <div className="w-2.5 h-2.5" />}
-          </div>
-        ))}
-      </div>
 
       {/* Channel Navigation Sidebar */}
       <div className="hidden md:flex w-72 flex-col bg-muted/30 border-r border-border">
