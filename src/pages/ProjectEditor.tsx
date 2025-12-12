@@ -8,7 +8,7 @@ import { ChatChannelsMenu } from "@/components/scale/ChatChannelsMenu"
 import { ChatMessage } from "@/components/scale/ChatMessage"
 import { ChatInput } from "@/components/scale/ChatInput"
 import { ScaleHeader } from "@/components/scale/header"
-import { ScaleFooter } from "@/components/scale/footer"
+
 import {
   ChevronDown,
   Search,
