@@ -5,8 +5,7 @@ import { ScaleAvatar } from "@/components/scale/avatar"
 import { ScaleButton, IconButton } from "@/components/scale/buttons"
 import { ScaleBadge } from "@/components/scale/badges"
 import { ChatChannelsMenu } from "@/components/scale/ChatChannelsMenu"
-import { ChatMessage } from "@/components/scale/ChatMessage"
-import { ChatInput } from "@/components/scale/ChatInput"
+import { BlogPost } from "@/components/scale/BlogPost"
 
 
 import {
@@ -254,89 +253,11 @@ export default function ProjectEditor() {
           </div>
         </div>
 
-        {/* Main Chat Area */}
+        {/* Main Blog Area */}
         <div className="flex flex-1 flex-col min-w-0 overflow-hidden">
-          {/* Channel Header - Fixed */}
-          <div className="flex items-center gap-3 border-b border-border px-4 py-3 bg-background z-10 flex-shrink-0">
-            <div className="flex items-center gap-2">
-              <div className="flex items-center justify-center rounded-md border border-border bg-card p-1">
-                <Hash className="w-3.5 h-3.5 text-muted-foreground" />
-              </div>
-              <nav className="flex items-center gap-1 text-sm">
-                <span className="text-muted-foreground">Favorites</span>
-                <span className="text-muted-foreground">/</span>
-                <span className="font-medium text-foreground">{selectedChannel}</span>
-              </nav>
-            </div>
-            <div className="flex-1" />
-            <IconButton variant="ghost" size="sm">
-              <Star className="w-3.5 h-3.5" />
-            </IconButton>
-            <IconButton variant="ghost" size="sm">
-              <Bell className="w-3.5 h-3.5" />
-            </IconButton>
-            <IconButton variant="ghost" size="sm">
-              <SlidersHorizontal className="w-3.5 h-3.5" />
-            </IconButton>
-          </div>
-
-          {/* Messages Area - Scrollable */}
-          <div className="flex-1 overflow-y-auto px-4 py-4 scrollbar-thin">
-            {messages.map((msg) => (
-              <ChatMessage
-                key={msg.id}
-                avatar={msg.avatar}
-                author={msg.author}
-                timestamp={msg.timestamp}
-                toolbar={
-                  <>
-                    {msg.reactions?.map((reaction, index) => (
-                      <ScaleButton key={index} variant="secondary" size="sm" className="h-6 px-2 text-xs">
-                        {reaction}
-                      </ScaleButton>
-                    ))}
-                    <IconButton variant="ghost" size="sm" className="h-6 w-6">
-                      <SmilePlus className="w-3.5 h-3.5" />
-                    </IconButton>
-                  </>
-                }
-              >
-                <p className="whitespace-pre-wrap text-sm">{msg.content}</p>
-                {msg.hasAttachment && (
-                  <div className="flex flex-wrap items-start overflow-hidden rounded-lg border border-border bg-muted/30 mt-2">
-                    <div className="flex h-14 w-14 items-center justify-center overflow-hidden">
-                      <img
-                        className="h-5 w-5 object-cover"
-                        src="https://res.cloudinary.com/subframe/image/upload/v1711417507/shared/y2rsnhq3mex4auk54aye.png"
-                        alt=""
-                      />
-                    </div>
-                    <div className="flex flex-1 flex-col justify-center gap-1 p-3">
-                      <span className="font-semibold text-sm text-foreground line-clamp-1">
-                        Dashboard Redesign
-                      </span>
-                      <span className="text-xs text-muted-foreground line-clamp-2">
-                        app.promptit.com
-                      </span>
-                    </div>
-                  </div>
-                )}
-                {msg.hasImage && (
-                  <div className="mt-2 overflow-hidden rounded-lg border border-border bg-card shadow-sm">
-                    <img
-                      className="h-32 w-full object-cover"
-                      src="https://res.cloudinary.com/subframe/image/upload/v1713908895/uploads/279/fgotrrosb9jl6bryufsx.avif"
-                      alt=""
-                    />
-                  </div>
-                )}
-              </ChatMessage>
-            ))}
-          </div>
-
-          {/* Message Input - Fixed at bottom */}
-          <div className="p-4 border-t border-border bg-background flex-shrink-0">
-            <ChatInput onSend={handleSendMessage} placeholder="Message #design" />
+          {/* Blog Content - Scrollable */}
+          <div className="flex-1 overflow-y-auto scrollbar-thin">
+            <BlogPost />
           </div>
         </div>
         </div>
