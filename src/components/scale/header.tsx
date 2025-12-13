@@ -4,6 +4,7 @@ import { useState } from "react"
 import { ScaleButton } from "./buttons"
 import { Menu, X, ChevronDown } from "lucide-react"
 
+
 interface NavItem {
   label: string
   href?: string
@@ -26,11 +27,10 @@ const defaultNavItems: NavItem[] = [
       { label: "Evaluation", href: "#", description: "Test and evaluate models" },
     ],
   },
-  { label: "Leaderboards", href: "#" },
-  { label: "Enterprise", href: "#" },
-  { label: "Government", href: "#" },
-  { label: "Customers", href: "#" },
-  { label: "Resources", href: "#" },
+  { label: "Dashboard", href: "#" },
+  { label: "Pricing", href: "#" },
+  { label: "Docs", href: "#" },
+  
 ]
 
 export function ScaleHeader({ logo, navItems = defaultNavItems, className }: HeaderProps) {
