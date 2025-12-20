@@ -1,7 +1,8 @@
 "use client"
 
 import type React from "react"
-import { useState, useEffect, useRef } from "react"
+import { useState, useEffect } from "react"
+import { useNavigate } from "react-router-dom"
 
 // Import from your components/scale folder
 import { H2, H3, Body } from "@/components/scale/typography"
@@ -12,7 +13,11 @@ import { ScaleHeader } from "@/components/scale/header"
 import { ScaleFooter } from "@/components/scale/footer"
 import { CreateProjectWizard } from "@/components/scale/CreateProjectWizard"
 import { NetworkAnimation } from "@/components/scale/NetworkAnimation"
+import { DashboardSkeleton } from "@/components/scale/DashboardSkeleton"
+import { StatusBadge } from "@/components/scale/badges"
 import { Coins, Settings, Building, Compass, MapPin, Bookmark, MoreHorizontal, Plus, Layers, Zap } from "lucide-react"
+import { api } from "@/lib/api"
+import { toast } from "sonner"
 
 // ============================================
 // NETWORK ANIMATION COMPONENT (INLINE)
@@ -25,24 +30,60 @@ function JobCard({
   icon,
   company,
   role,
-  salary,
+  status,
   location,
+  onClick,
 }: {
   icon: React.ReactNode
   company: string
   role: string
-  salary: string
+  status: string
   location: string
+  onClick?: () => void
 }) {
+  // Map project status to StatusBadge status
+  const getStatusBadgeStatus = (status: string): "active" | "pending" | "inactive" => {
+    if (status === "active") return "active"
+    if (status === "archived") return "inactive"
+    return "inactive" // deleted or any other status
+  }
+
+  // Format status label - keep it short and concise
+  const getStatusLabel = (status: string): string => {
+    const statusMap: Record<string, string> = {
+      active: "Active",
+      archived: "Arch",
+      deleted: "Del",
+    }
+    return statusMap[status] || status.charAt(0).toUpperCase() + status.slice(1, 4)
+  }
+
   return (
-    <ScaleCard className="flex flex-col gap-4 p-4">
+    <ScaleCard 
+      className="flex flex-col gap-4 p-4 cursor-pointer hover:border-muted-foreground/30 transition-all duration-200"
+      onClick={onClick}
+    >
       <div className="flex items-start gap-2">
         <IconWithBackground icon={icon} size="md" square />
         <div className="flex flex-1 items-center justify-end gap-1">
-          <IconButton variant="ghost" size="sm">
+          <IconButton 
+            variant="ghost" 
+            size="sm"
+            onClick={(e) => {
+              e.stopPropagation()
+              // Handle bookmark action
+            }}
+          >
             <Bookmark className="w-4 h-4" />
           </IconButton>
-          <IconButton variant="ghost" size="sm">
+          <IconButton 
+            variant="ghost" 
+            size="sm"
+            onClick={(e) => {
+              e.stopPropagation()
+              // Handle more options
+            }}
+          >
             <MoreHorizontal className="w-4 h-4" />
           </IconButton>
         </div>
@@ -52,7 +93,11 @@ function JobCard({
           <span className="text-sm font-semibold text-foreground line-clamp-1">{company}</span>
           <span className="text-xs text-muted-foreground line-clamp-1">{role}</span>
         </div>
-        <span className="text-lg font-semibold text-foreground">{salary}</span>
+        <StatusBadge 
+          status={getStatusBadgeStatus(status)} 
+          label={getStatusLabel(status)}
+          className="px-2"
+        />
         <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
           <MapPin className="w-3 h-3" />
           <span>{location}</span>
@@ -109,8 +154,45 @@ function QuickActionCard({
 // MAIN DASHBOARD COMPONENT
 // ============================================
 export default function Dashboard() {
-  const [referralLink] = useState("https://app.scale.com/ref/abc123xyz")
+  const [referralLink, setReferralLink] = useState("")
   const [wizardOpen, setWizardOpen] = useState(false)
+  const [user, setUser] = useState<any>(null)
+  const [projects, setProjects] = useState<any[]>([])
+  const [loading, setLoading] = useState(true)
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const [userData, projectsData, referralData] = await Promise.all([
+          api.getCurrentUser(),
+          api.getProjects(),
+          api.getReferralLink().catch(() => ({ referral_link: "" }))
+        ])
+        setUser(userData)
+        // Handle both paginated (with results) and non-paginated (direct array) responses
+        const projectsList = Array.isArray(projectsData) 
+          ? projectsData 
+          : (projectsData.results || projectsData.data || [])
+        console.log("Projects loaded:", projectsList)
+        setProjects(projectsList)
+        setReferralLink(referralData.referral_link || "")
+      } catch (error: any) {
+        if (error.message.includes("401") || error.message.includes("Unauthorized")) {
+          navigate("/login")
+        } else {
+          toast.error("Failed to load dashboard data")
+        }
+      } finally {
+        setLoading(false)
+      }
+    }
+    fetchData()
+  }, [navigate])
+
+  if (loading) {
+    return <DashboardSkeleton />;
+  }
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
@@ -119,17 +201,21 @@ export default function Dashboard() {
       <div className="flex-1 flex flex-col gap-12 px-6 md:px-12 py-12 pb-24 max-w-7xl mx-auto w-full">
         {/* Header */}
         <div className="flex flex-wrap items-center gap-4">
-          <h1 className="flex-1 text-4xl font-semibold text-foreground">Hi, Alex!</h1>
+          <h1 className="flex-1 text-4xl font-semibold text-foreground">
+            Hi, {user?.username || user?.email?.split("@")[0] || "User"}!
+          </h1>
           <div className="flex items-center gap-6">
             <div className="flex items-center gap-3">
               <span className="text-sm font-semibold text-foreground">Balance</span>
               <div className="w-px h-6 bg-border" />
               <div className="flex items-center gap-1">
                 <Coins className="w-5 h-5 text-foreground" />
-                <span className="text-xl font-semibold text-foreground">0</span>
+                <span className="text-xl font-semibold text-foreground">{user?.balance || 0}</span>
               </div>
             </div>
-            <ScaleButton>Refer & Earn</ScaleButton>
+            <ScaleButton onClick={() => referralLink && navigator.clipboard.writeText(referralLink)}>
+              Refer & Earn
+            </ScaleButton>
           </div>
         </div>
 
@@ -161,49 +247,63 @@ export default function Dashboard() {
             </ScaleButton>
           </div>
 
-          {/* Row 1 */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <JobCard
-              icon={<Settings className="w-4 h-4" />}
-              company="Freelance Labs"
-              role="Account Manager"
-              salary="$250k/yr"
-              location="San Francisco, CA"
-            />
-            <JobCard
-              icon={<Building className="w-4 h-4" />}
-              company="Tech Startup Inc"
-              role="Product Designer"
-              salary="$180k/yr"
-              location="Remote"
-            />
-            <JobCard
-              icon={<Compass className="w-4 h-4" />}
-              company="Scale AI"
-              role="ML Engineer"
-              salary="$300k/yr"
-              location="New York, NY"
-            />
-            <JobCard
-              icon={<Layers className="w-4 h-4" />}
-              company="DataFlow"
-              role="Data Scientist"
-              salary="$220k/yr"
-              location="Austin, TX"
-            />
-          </div>
+          {projects.length > 0 ? (
+            <>
+              {/* Row 1 */}
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                {projects.slice(0, 4).map((project) => (
+                  <JobCard
+                    key={project.id}
+                    icon={<Settings className="w-4 h-4" />}
+                    company={project.name}
+                    role={project.output_type || "Project"}
+                    status={project.status}
+                    location={new Date(project.created_at).toLocaleDateString()}
+                    onClick={() => {
+                      if (project.id) {
+                        navigate(`/editor/${project.id}`)
+                      } else {
+                        console.error("Project ID is missing:", project)
+                      }
+                    }}
+                  />
+                ))}
+                {projects.length < 4 && (
+                  <CreateProjectCard onClick={() => setWizardOpen(true)} />
+                )}
+              </div>
 
-          {/* Row 2 */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <JobCard
-              icon={<Zap className="w-4 h-4" />}
-              company="Rapid Systems"
-              role="Backend Dev"
-              salary="$190k/yr"
-              location="Seattle, WA"
-            />
-            <CreateProjectCard onClick={() => setWizardOpen(true)} />
-          </div>
+              {/* Row 2 */}
+              {projects.length > 4 && (
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                  {projects.slice(4, 8).map((project) => (
+                    <JobCard
+                      key={project.id}
+                      icon={<Zap className="w-4 h-4" />}
+                      company={project.name}
+                      role={project.output_type || "Project"}
+                      status={project.status}
+                      location={new Date(project.created_at).toLocaleDateString()}
+                      onClick={() => {
+                        if (project.id) {
+                          navigate(`/editor/${project.id}`)
+                        } else {
+                          console.error("Project ID is missing:", project)
+                        }
+                      }}
+                    />
+                  ))}
+                  {projects.length < 8 && (
+                    <CreateProjectCard onClick={() => setWizardOpen(true)} />
+                  )}
+                </div>
+              )}
+            </>
+          ) : (
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <CreateProjectCard onClick={() => setWizardOpen(true)} />
+            </div>
+          )}
         </div>
 
         {/* Spacer div for extra bottom space */}

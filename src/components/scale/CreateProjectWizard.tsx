@@ -1,12 +1,15 @@
 "use client"
 
 import { useState, useMemo } from "react"
+import { useNavigate } from "react-router-dom"
 import { Dialog, DialogContent, DialogOverlay, DialogPortal } from "@/components/ui/dialog"
 import { ScaleButton } from "@/components/scale/buttons"
 import { ScaleInput, ScaleTextarea } from "@/components/scale/inputs"
 import { Progress } from "@/components/ui/progress"
 import { ArrowLeft, ArrowRight, Check } from "lucide-react"
 import { cn } from "@/lib/utils"
+import { api } from "@/lib/api"
+import { toast } from "sonner"
 
 // ============ TYPES ============
 
@@ -181,10 +184,13 @@ function CheckboxItem({
 }: {
   label: string
   checked: boolean
-  onChange: (checked: boolean) => void
+  onChange: () => void
 }) {
   return (
-    <label className="flex items-center gap-3 cursor-pointer group">
+    <label 
+      className="flex items-center gap-3 cursor-pointer group"
+      onClick={onChange}
+    >
       <div
         className={cn(
           "w-5 h-5 rounded border-2 flex items-center justify-center transition-all",
@@ -210,6 +216,7 @@ interface CreateProjectWizardProps {
 export function CreateProjectWizard({ open, onOpenChange }: CreateProjectWizardProps) {
   const [currentStep, setCurrentStep] = useState(0)
   const [wizardData, setWizardData] = useState<WizardData>(initialWizardData)
+  const navigate = useNavigate()
 
   const totalSteps = 4
   const progress = ((currentStep + 1) / totalSteps) * 100
@@ -280,14 +287,37 @@ export function CreateProjectWizard({ open, onOpenChange }: CreateProjectWizardP
     if (currentStep > 0) setCurrentStep(currentStep - 1)
   }
 
-  const handleNext = () => {
+  const handleNext = async () => {
     if (currentStep < totalSteps - 1) {
       setCurrentStep(currentStep + 1)
     } else {
-      console.log("Final wizard data:", wizardData)
-      onOpenChange(false)
-      setCurrentStep(0)
-      setWizardData(initialWizardData)
+      // Final step - create project
+      try {
+        // Map wizardData to API format
+        const projectPayload = {
+          name: wizardData.project_name || "Untitled Project",
+          description: wizardData.project_description,
+          ai_tools: wizardData.ai_tools,
+          target_users: wizardData.target_users || "",
+          experience_level: wizardData.experience_level || "",
+          output_type: wizardData.output_type || "",
+          expected_outputs: wizardData.expected_outputs,
+          frontend_framework: wizardData.frontend_framework || "",
+          styling: wizardData.styling || "",
+          backend_framework: wizardData.backend_framework || "",
+          database: wizardData.database || "",
+          language: wizardData.language || "",
+        }
+        const project = await api.createProject(projectPayload) as any
+        toast.success("Project created successfully! Generating prompts...")
+        onOpenChange(false)
+        setCurrentStep(0)
+        setWizardData(initialWizardData)
+        // Navigate to editor page
+        navigate(`/editor/${project.id}`)
+      } catch (error: any) {
+        toast.error(error.message || "Failed to create project. Please try again.")
+      }
     }
   }
 

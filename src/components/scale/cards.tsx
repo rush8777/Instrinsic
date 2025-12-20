@@ -5,11 +5,12 @@ import { ArrowRight, ArrowUpRight } from "lucide-react"
 interface CardProps {
   children: ReactNode
   className?: string
+  onClick?: () => void
 }
 
 // Base Card
-export function ScaleCard({ children, className }: CardProps) {
-  return <div className={cn("rounded-xl border border-border bg-card p-6", className)}>{children}</div>
+export function ScaleCard({ children, className, onClick }: CardProps) {
+  return <div className={cn("rounded-xl border border-border bg-card p-6", className)} onClick={onClick}>{children}</div>
 }
 
 // Feature Card - with icon and description

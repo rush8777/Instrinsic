@@ -1,8 +1,10 @@
 "use client"
 
 import type React from "react"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Check, Flame } from "lucide-react"
+import { api } from "@/lib/api"
+import { toast } from "sonner"
 
 // Scale AI Components
 import { ScaleHeader } from "@/components/scale/header"
@@ -175,8 +177,35 @@ function PricingCard({
 
 export default function PricingPage() {
   const [billingPeriod, setBillingPeriod] = useState("monthly")
+  const [plans, setPlans] = useState<any[]>([])
+  const [loading, setLoading] = useState(true)
 
-  const plans = [
+  useEffect(() => {
+    const fetchPlans = async () => {
+      try {
+        const data = await api.getPlans()
+        // Transform API data to match component format
+        const transformedPlans = data.map((plan: any) => ({
+          id: plan.id,
+          title: plan.name,
+          price: billingPeriod === "monthly" 
+            ? (parseFloat(plan.price_monthly) === 0 ? "Free" : `$${plan.price_monthly}`)
+            : (parseFloat(plan.price_yearly) === 0 ? "Free" : `$${plan.price_yearly}`),
+          period: billingPeriod === "monthly" 
+            ? (parseFloat(plan.price_monthly) === 0 ? "" : "Per month/user")
+            : (parseFloat(plan.price_yearly) === 0 ? "" : "Per year/user"),
+          description: plan.description || "Great plan",
+          features: plan.features || [],
+          buttonText: plan.slug === "enterprise" ? "Contact us" : "Get started",
+          buttonVariant: plan.slug === "teams" ? "primary" as const : "secondary" as const,
+          highlighted: plan.slug === "teams",
+          dark: plan.slug === "enterprise",
+        }))
+        setPlans(transformedPlans)
+      } catch (error: any) {
+        console.error("Failed to load pricing plans:", error)
+        // Fallback to default plans (static data)
+        const defaultPlans = [
     {
       title: "Individuals",
       price: "Free",
@@ -219,7 +248,14 @@ export default function PricingPage() {
       buttonVariant: "outline" as const,
       dark: true,
     },
-  ]
+        ]
+        setPlans(defaultPlans)
+      } finally {
+        setLoading(false)
+      }
+    }
+    fetchPlans()
+  }, [billingPeriod])
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
@@ -238,8 +274,11 @@ export default function PricingPage() {
         </div>
 
         {/* Pricing Cards Grid */}
-        <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {plans.map((plan, index) => (
+        {loading ? (
+          <div className="text-center py-8 text-muted-foreground">Loading plans...</div>
+        ) : (
+          <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {plans.map((plan, index) => (
             <PricingCard
               key={index}
               title={plan.title}
@@ -252,8 +291,9 @@ export default function PricingPage() {
               highlighted={plan.highlighted}
               dark={plan.dark}
             />
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
 
         {/* FAQ Teaser */}
         <div className="flex flex-col items-center gap-4 pt-8">
