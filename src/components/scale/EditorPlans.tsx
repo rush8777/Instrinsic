@@ -135,19 +135,19 @@ export function EditorPlans({ projectId }: EditorPlansProps) {
   ]
 
   return (
-    <div className="flex flex-1 flex-col h-full overflow-hidden bg-background">
-      {/* Header */}
-      <div className="flex items-center justify-between px-4 py-3 border-b border-border">
+    <div className="flex flex-1 flex-col h-full overflow-hidden bg-gradient-to-br from-background via-background to-muted/20">
+      {/* Header - Glassmorphism */}
+      <div className="flex items-center justify-between px-4 py-3 border-b border-border/50 backdrop-blur-xl bg-background/70">
         {/* Model Selector */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <button className="flex items-center gap-2 px-3 py-1.5 rounded-lg hover:bg-muted/50 transition-colors">
+            <button className="flex items-center gap-2 px-3 py-1.5 rounded-lg hover:bg-muted/30 backdrop-blur-sm transition-colors">
               <span className="font-semibold text-lg text-foreground">ChatGPT</span>
               <span className="text-muted-foreground text-lg">o1</span>
               <ChevronDown className="w-4 h-4 text-muted-foreground" />
             </button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="start" className="w-72 bg-popover border-border">
+          <DropdownMenuContent align="start" className="w-72 backdrop-blur-xl bg-popover/90 border-border/50 shadow-xl">
             <div className="px-3 py-2">
               <div className="flex items-center justify-between mb-2">
                 <BodySmall className="text-muted-foreground font-medium">Model</BodySmall>
@@ -187,7 +187,7 @@ export function EditorPlans({ projectId }: EditorPlansProps) {
               A
             </button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-56 bg-popover border-border">
+          <DropdownMenuContent align="end" className="w-56 backdrop-blur-xl bg-popover/90 border-border/50 shadow-xl">
             <DropdownMenuItem className="flex items-center gap-3">
               <Sparkles className="w-4 h-4" />
               <span>My GPTs</span>
@@ -230,7 +230,7 @@ export function EditorPlans({ projectId }: EditorPlansProps) {
             
             {/* Input Area - Centered */}
             <div className="w-full max-w-2xl">
-              <div className="relative flex items-end rounded-2xl border border-border bg-muted/30 p-2 focus-within:border-primary/50 transition-colors">
+              <div className="relative flex items-end rounded-2xl border border-border/50 backdrop-blur-xl bg-muted/20 p-2 focus-within:border-primary/50 shadow-lg transition-all">
                 <textarea
                   ref={textareaRef}
                   value={inputValue}
@@ -249,7 +249,7 @@ export function EditorPlans({ projectId }: EditorPlansProps) {
                         <Paperclip className="w-4 h-4" />
                       </IconButton>
                     </DropdownMenuTrigger>
-                    <DropdownMenuContent align="start" className="bg-popover border-border">
+                    <DropdownMenuContent align="start" className="backdrop-blur-xl bg-popover/90 border-border/50 shadow-xl">
                       <DropdownMenuItem className="flex items-center gap-3">
                         <Cloud className="w-4 h-4" />
                         <span>Connect to Google Drive</span>
@@ -287,7 +287,7 @@ export function EditorPlans({ projectId }: EditorPlansProps) {
                 <button
                   key={i}
                   onClick={() => setInputValue(action.label)}
-                  className="flex items-center gap-2 px-4 py-2 rounded-full border border-border bg-background hover:bg-muted/50 transition-colors text-sm text-foreground"
+                  className="flex items-center gap-2 px-4 py-2 rounded-full border border-border/50 backdrop-blur-sm bg-background/50 hover:bg-muted/30 hover:border-border transition-all text-sm text-foreground shadow-sm"
                 >
                   <action.icon className="w-4 h-4" />
                   <span>{action.label}</span>
@@ -306,15 +306,15 @@ export function EditorPlans({ projectId }: EditorPlansProps) {
                 )}
               >
                 {message.role === "assistant" && (
-                  <div className="flex-shrink-0 w-8 h-8 rounded-full bg-foreground flex items-center justify-center">
+                  <div className="flex-shrink-0 w-8 h-8 rounded-full bg-foreground/90 backdrop-blur-sm flex items-center justify-center shadow-md">
                     <Sparkles className="w-4 h-4 text-background" />
                   </div>
                 )}
                 <div
                   className={cn(
-                    "max-w-[80%] rounded-2xl px-4 py-3",
+                    "max-w-[80%] rounded-2xl px-4 py-3 backdrop-blur-sm",
                     message.role === "user"
-                      ? "bg-muted"
+                      ? "bg-muted/50 border border-border/30 shadow-sm"
                       : "bg-transparent"
                   )}
                 >
@@ -336,9 +336,9 @@ export function EditorPlans({ projectId }: EditorPlansProps) {
 
       {/* Bottom Input (when there are messages) */}
       {messages.length > 0 && (
-        <div className="border-t border-border p-4">
+        <div className="border-t border-border/50 p-4 backdrop-blur-xl bg-background/70">
           <div className="max-w-3xl mx-auto">
-            <div className="relative flex items-end rounded-2xl border border-border bg-muted/30 p-2 focus-within:border-primary/50 transition-colors">
+            <div className="relative flex items-end rounded-2xl border border-border/50 backdrop-blur-xl bg-muted/20 p-2 focus-within:border-primary/50 shadow-lg transition-all">
               <textarea
                 ref={textareaRef}
                 value={inputValue}
@@ -356,7 +356,7 @@ export function EditorPlans({ projectId }: EditorPlansProps) {
                       <Paperclip className="w-4 h-4" />
                     </IconButton>
                   </DropdownMenuTrigger>
-                  <DropdownMenuContent align="start" className="bg-popover border-border">
+                  <DropdownMenuContent align="start" className="backdrop-blur-xl bg-popover/90 border-border/50 shadow-xl">
                     <DropdownMenuItem className="flex items-center gap-3">
                       <Cloud className="w-4 h-4" />
                       <span>Connect to Google Drive</span>
