@@ -313,8 +313,8 @@ export function CreateProjectWizard({ open, onOpenChange }: CreateProjectWizardP
         onOpenChange(false)
         setCurrentStep(0)
         setWizardData(initialWizardData)
-        // Navigate to editor page
-        navigate(`/editor/${project.id}`)
+        // Navigate to library section for from-scratch projects
+        navigate(`/editor/${project.id}/library`)
       } catch (error: any) {
         toast.error(error.message || "Failed to create project. Please try again.")
       }

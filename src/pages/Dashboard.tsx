@@ -11,7 +11,7 @@ import { ScaleCard, HighlightCard } from "@/components/scale/cards"
 import { IconWithBackground } from "@/components/scale/icon-with-background"
 import { ScaleHeader } from "@/components/scale/header"
 import { ScaleFooter } from "@/components/scale/footer"
-import { CreateProjectWizard } from "@/components/scale/CreateProjectWizard"
+import { ProjectCreationModal } from "@/components/scale/ProjectCreationModal"
 import { NetworkAnimation } from "@/components/scale/NetworkAnimation"
 import { DashboardSkeleton } from "@/components/scale/DashboardSkeleton"
 import { StatusBadge } from "@/components/scale/badges"
@@ -155,7 +155,7 @@ function QuickActionCard({
 // ============================================
 export default function Dashboard() {
   const [referralLink, setReferralLink] = useState("")
-  const [wizardOpen, setWizardOpen] = useState(false)
+  const [modalOpen, setModalOpen] = useState(false)
   const [user, setUser] = useState<any>(null)
   const [projects, setProjects] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
@@ -269,7 +269,7 @@ export default function Dashboard() {
                   />
                 ))}
                 {projects.length < 4 && (
-                  <CreateProjectCard onClick={() => setWizardOpen(true)} />
+                  <CreateProjectCard onClick={() => setModalOpen(true)} />
                 )}
               </div>
 
@@ -286,7 +286,7 @@ export default function Dashboard() {
                       location={new Date(project.created_at).toLocaleDateString()}
                       onClick={() => {
                         if (project.id) {
-                          navigate(`/editor/${project.id}`)
+                          navigate(`/editor/${project.id}/library`)
                         } else {
                           console.error("Project ID is missing:", project)
                         }
@@ -294,14 +294,14 @@ export default function Dashboard() {
                     />
                   ))}
                   {projects.length < 8 && (
-                    <CreateProjectCard onClick={() => setWizardOpen(true)} />
+                    <CreateProjectCard onClick={() => setModalOpen(true)} />
                   )}
                 </div>
               )}
             </>
           ) : (
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              <CreateProjectCard onClick={() => setWizardOpen(true)} />
+              <CreateProjectCard onClick={() => setModalOpen(true)} />
             </div>
           )}
         </div>
@@ -310,8 +310,8 @@ export default function Dashboard() {
         <div className="flex-1 min-h-[120px]" />
       </div>
 
-      {/* Create Project Wizard */}
-      <CreateProjectWizard open={wizardOpen} onOpenChange={setWizardOpen} />
+      {/* Create Project Modal */}
+      <ProjectCreationModal open={modalOpen} onOpenChange={setModalOpen} />
 
       {/* Scale Footer */}
       <ScaleFooter />

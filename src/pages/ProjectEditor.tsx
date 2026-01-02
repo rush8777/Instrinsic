@@ -3,11 +3,12 @@
 import React, { useState, useEffect, useCallback, useRef } from "react"
 import { useNavigate, useParams } from "react-router-dom"
 import { IconButton, ScaleButton } from "@/components/scale/buttons"
-import { BlogPost, ContentBlock } from "@/components/scale/BlogPost"
-import { TreeView } from "@/components/scale/TreeView"
-import { SearchInput } from "@/components/scale/inputs"
-import { H4 } from "@/components/scale/typography"
 import { ProjectEditorSkeleton } from "@/components/scale/ProjectEditorSkeleton"
+import { EditorSidebar } from "@/components/scale/EditorSidebar"
+import { EditorLibrary } from "@/components/scale/EditorLibrary"
+import { EditorPlans } from "@/components/scale/EditorPlans"
+import { EditorStatus } from "@/components/scale/EditorStatus"
+import { EditorDocs } from "@/components/scale/EditorDocs"
 import { api } from "@/lib/api"
 import { toast } from "sonner"
 
@@ -29,14 +30,6 @@ interface Project {
 }
 
 import {
-  Library,
-  Globe,
-  Star,
-  Pin,
-  ListMusic,
-  Plus,
-  PanelLeftClose,
-  PanelLeft,
   ArrowLeft,
   Save,
   MoreVertical,
@@ -55,9 +48,16 @@ export default function ProjectEditor() {
   const [project, setProject] = useState<Project | null>(null)
   const [loading, setLoading] = useState(true)
   const [generating, setGenerating] = useState(false)
-  const { id } = useParams<{ id: string }>()
+  const { id, section } = useParams<{ id: string; section?: string }>()
   const navigate = useNavigate()
   const currentIdRef = useRef<string | null>(null)
+
+  // Default to library if no section is provided
+  useEffect(() => {
+    if (id && !section) {
+      navigate(`/editor/${id}/library`, { replace: true })
+    }
+  }, [id, section, navigate])
 
   const generatePrompts = useCallback(async (projectData: Project) => {
     const projectId = projectData.id.toString()
@@ -122,8 +122,11 @@ export default function ProjectEditor() {
         if (currentIdRef.current === id) {
           setProject(projectData)
           
-          // If project has no content blocks, generate prompts
-          if (!projectData.content_blocks || projectData.content_blocks.length === 0) {
+          // Only auto-generate prompts for library section if no content blocks
+          // Don't auto-generate for repository projects (they go to plans section)
+          if ((!section || section === "library") && 
+              (!projectData.content_blocks || projectData.content_blocks.length === 0) &&
+              !projectData.repository_name) {
             generatePrompts(projectData)
           }
         }
@@ -244,115 +247,36 @@ export default function ProjectEditor() {
 
       {/* Main Content - Fixed height, no scroll */}
       <div className="flex flex-1 overflow-hidden">
+        {/* Editor Sidebar */}
+        <EditorSidebar
+          collapsed={sidebarCollapsed}
+          onToggleCollapse={() => setSidebarCollapsed(!sidebarCollapsed)}
+        />
 
-        <div className="flex flex-1 overflow-hidden">
-          {/* Channel Navigation Sidebar - Fixed */}
-          <div 
-            className={`hidden md:flex flex-col bg-muted/30 border-r border-border transition-all duration-300 overflow-y-auto ${
-              sidebarCollapsed ? "w-14" : "w-64"
-            }`}
-          >
-            {/* Sidebar Header */}
-            <div className="flex items-center gap-2 p-3">
-              {!sidebarCollapsed && (
-                <>
-                  <Library className="w-5 h-5 text-foreground" />
-                  <H4 className="flex-1 truncate">SPACE</H4>
-                </>
-              )}
-              <IconButton 
-                variant="ghost" 
-                size="sm"
-                onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
-                className="ml-auto"
-              >
-                {sidebarCollapsed ? (
-                  <PanelLeft className="w-4 h-4" />
-                ) : (
-                  <Plus className="w-4 h-4" />
-                )}
-              </IconButton>
-            </div>
-
-            {/* Search */}
-            {!sidebarCollapsed && (
-              <div className="px-2 pb-2">
-                <SearchInput placeholder="Search" className="h-9 text-sm" />
-              </div>
-            )}
-
-            {/* Tree View */}
-            <div className="flex-1 overflow-y-auto px-2 pb-2 scrollbar-thin">
-              {sidebarCollapsed ? (
-                // Collapsed state - show only icons
-                <div className="flex flex-col items-center gap-1">
-                  <IconButton variant="ghost" size="sm" className="w-full justify-center">
-                    <Globe className="w-4 h-4" />
-                  </IconButton>
-                  <IconButton variant="ghost" size="sm" className="w-full justify-center">
-                    <Star className="w-4 h-4" />
-                  </IconButton>
-                  <IconButton variant="ghost" size="sm" className="w-full justify-center">
-                    <Pin className="w-4 h-4" />
-                  </IconButton>
-                  <div className="w-full h-px bg-border my-2" />
-                  <IconButton variant="ghost" size="sm" className="w-full justify-center">
-                    <ListMusic className="w-4 h-4" />
-                  </IconButton>
-                </div>
-              ) : (
-                <TreeView defaultSelected="Chill Vibes Only">
-                  <TreeView.Item label="Daily Discover" icon={<Globe className="w-4 h-4" />} />
-                  <TreeView.Item label="New Releases" icon={<Star className="w-4 h-4" />} />
-                  <TreeView.Item label="Liked Songs" icon={<Pin className="w-4 h-4" />} />
-                  <TreeView.Folder label="My Playlists">
-                    <TreeView.Item 
-                      label="Chill Vibes Only" 
-                      icon={<ListMusic className="w-4 h-4" />} 
-                    />
-                    <TreeView.Item label="Morning Boost" icon={<ListMusic className="w-4 h-4" />} />
-                    <TreeView.Item label="Late Night Grooves" icon={<ListMusic className="w-4 h-4" />} />
-                  </TreeView.Folder>
-                  <TreeView.Folder label="Shared">
-                    <TreeView.Item label="Sunday Brunch Tunes" icon={<ListMusic className="w-4 h-4" />} />
-                    <TreeView.Item label="Road Trip Jams" icon={<ListMusic className="w-4 h-4" />} />
-                    <TreeView.Item label="Serotonin Sunrise" icon={<ListMusic className="w-4 h-4" />} />
-                  </TreeView.Folder>
-                </TreeView>
-              )}
-            </div>
-          </div>
-
-        {/* Main Blog Area */}
+        {/* Section Content */}
         <div className="flex flex-1 flex-col min-w-0 overflow-hidden">
-          {/* Blog Content - Scrollable */}
-          <div className="flex-1 overflow-y-auto scrollbar-thin">
-            {generating ? (
-              <div className="flex items-center justify-center h-full">
-                <div className="text-center">
-                  <div className="text-lg font-semibold text-foreground mb-2">Generating Prompts...</div>
-                  <div className="text-sm text-muted-foreground">This may take a few moments</div>
-                </div>
-              </div>
-            ) : project ? (
-              <BlogPost
-                title={project.title || project.name}
-                author={project.author}
-                category={project.category}
-                createdAt={project.created_at}
-                updatedAt={project.updated_at}
-                tags={project.tags}
-                description={project.description}
-                outputType={project.output_type}
-                content={project.content_blocks}
-              />
-            ) : (
-              <BlogPost />
-            )}
-          </div>
+          {project && (
+            <>
+              {section === "library" && (
+                <EditorLibrary
+                  projectId={project.id}
+                  project={project}
+                  onProjectUpdate={setProject}
+                />
+              )}
+              {section === "plans" && <EditorPlans projectId={project.id} />}
+              {section === "status" && <EditorStatus projectId={project.id} />}
+              {section === "docs" && <EditorDocs projectId={project.id} />}
+              {!section && (
+                <EditorLibrary
+                  projectId={project.id}
+                  project={project}
+                  onProjectUpdate={setProject}
+                />
+              )}
+            </>
+          )}
         </div>
-        </div>
-        {/* Footer - Spans full width at bottom */}
       </div>
       
     </div>

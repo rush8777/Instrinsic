@@ -228,6 +228,48 @@ class ApiClient {
       method: 'POST',
     });
   }
+
+  // Plans/Chat endpoints
+  async getPlanMessages(projectId: number) {
+    return this.request(`/projects/${projectId}/plans/messages/`);
+  }
+
+  async sendPlanMessage(projectId: number, message: string) {
+    return this.request(`/projects/${projectId}/plans/messages/`, {
+      method: 'POST',
+      body: JSON.stringify({ role: 'user', content: message }),
+    });
+  }
+
+  // Status/Todos endpoints
+  async getStatusItems(projectId: number) {
+    return this.request(`/projects/${projectId}/status/items/`);
+  }
+
+  async createStatusItem(projectId: number, item: { title: string; description?: string }) {
+    return this.request(`/projects/${projectId}/status/items/`, {
+      method: 'POST',
+      body: JSON.stringify(item),
+    });
+  }
+
+  async updateStatusItem(projectId: number, itemId: number, completed: boolean) {
+    return this.request(`/projects/${projectId}/status/items/${itemId}/`, {
+      method: 'PATCH',
+      body: JSON.stringify({ completed }),
+    });
+  }
+
+  // Documentation endpoints
+  async initializeDocs(projectId: number) {
+    return this.request(`/projects/${projectId}/docs/initialize/`, {
+      method: 'POST',
+    });
+  }
+
+  async getDocs(projectId: number) {
+    return this.request(`/projects/${projectId}/docs/`);
+  }
 }
 
 export const api = new ApiClient(API_BASE_URL);

@@ -3,8 +3,14 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from django_filters.rest_framework import DjangoFilterBackend
-from .models import Project
-from .serializers import ProjectSerializer, ProjectListSerializer
+from .models import Project, PlanMessage, StatusItem, Documentation
+from .serializers import (
+    ProjectSerializer, 
+    ProjectListSerializer, 
+    PlanMessageSerializer, 
+    StatusItemSerializer, 
+    DocumentationSerializer
+)
 
 
 class ProjectViewSet(viewsets.ModelViewSet):
@@ -148,4 +154,115 @@ class ProjectViewSet(viewsets.ModelViewSet):
                 'error': str(e),
                 'message': 'Failed to generate prompts'
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+    # Plans/Chat endpoints
+    @action(detail=True, methods=['get', 'post'], url_path='plans/messages')
+    def plans_messages(self, request, pk=None):
+        project = self.get_object()
+        
+        if request.method == 'GET':
+            messages = PlanMessage.objects.filter(project=project).order_by('created_at')
+            serializer = PlanMessageSerializer(messages, many=True)
+            return Response(serializer.data)
+        
+        elif request.method == 'POST':
+            serializer = PlanMessageSerializer(data=request.data)
+            if serializer.is_valid():
+                serializer.save(project=project)
+                # TODO: Generate assistant response using AI
+                # For now, just return the user message
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    # Status/Todos endpoints
+    @action(detail=True, methods=['get', 'post'], url_path='status/items')
+    def status_items(self, request, pk=None):
+        project = self.get_object()
+        
+        if request.method == 'GET':
+            items = StatusItem.objects.filter(project=project).order_by('-created_at')
+            serializer = StatusItemSerializer(items, many=True)
+            return Response(serializer.data)
+        
+        elif request.method == 'POST':
+            serializer = StatusItemSerializer(data=request.data)
+            if serializer.is_valid():
+                serializer.save(project=project)
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    @action(detail=True, methods=['patch'], url_path='status/items/(?P<item_id>[^/.]+)')
+    def update_status_item(self, request, pk=None, item_id=None):
+        project = self.get_object()
+        try:
+            item = StatusItem.objects.get(id=item_id, project=project)
+            serializer = StatusItemSerializer(item, data=request.data, partial=True)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        except StatusItem.DoesNotExist:
+            return Response(
+                {'error': 'Status item not found'},
+                status=status.HTTP_404_NOT_FOUND
+            )
+
+    # Documentation endpoints
+    @action(detail=True, methods=['get'], url_path='docs')
+    def docs(self, request, pk=None):
+        project = self.get_object()
+        try:
+            documentation = Documentation.objects.get(project=project)
+            serializer = DocumentationSerializer(documentation)
+            return Response(serializer.data)
+        except Documentation.DoesNotExist:
+            return Response(
+                {'error': 'Documentation not found'},
+                status=status.HTTP_404_NOT_FOUND
+            )
+
+    @action(detail=True, methods=['post'], url_path='docs/initialize')
+    def initialize_docs(self, request, pk=None):
+        project = self.get_object()
+        
+        # TODO: Generate documentation from repository
+        # For now, create a placeholder structure
+        file_tree = [
+            {
+                'name': 'src',
+                'type': 'directory',
+                'description': 'Source code directory',
+                'children': [
+                    {
+                        'name': 'components',
+                        'type': 'directory',
+                        'description': 'React components',
+                        'children': []
+                    },
+                    {
+                        'name': 'pages',
+                        'type': 'directory',
+                        'description': 'Page components',
+                        'children': []
+                    }
+                ]
+            },
+            {
+                'name': 'README.md',
+                'type': 'file',
+                'description': 'Project documentation and setup instructions'
+            }
+        ]
+        
+        documentation, created = Documentation.objects.get_or_create(
+            project=project,
+            defaults={'file_tree': file_tree}
+        )
+        
+        if not created:
+            documentation.file_tree = file_tree
+            documentation.save()
+        
+        serializer = DocumentationSerializer(documentation)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 

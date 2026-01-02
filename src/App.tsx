@@ -17,7 +17,7 @@ const queryClient = new QueryClient();
 
 // Wrapper component to add key based on route param
 function ProjectEditorWithKey() {
-  const { id } = useParams<{ id: string }>();
+  const { id, section } = useParams<{ id: string; section?: string }>();
   return <ProjectEditor key={id} />;
 }
 
@@ -41,7 +41,7 @@ const App = () => (
               } 
             />
             <Route 
-              path="/editor/:id" 
+              path="/editor/:id/:section?" 
               element={
                 <ProtectedRoute>
                   <ProjectEditorWithKey />

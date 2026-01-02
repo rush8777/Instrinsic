@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Project
+from .models import Project, PlanMessage, StatusItem, Documentation
 
 
 class ProjectSerializer(serializers.ModelSerializer):
@@ -16,6 +16,27 @@ class ProjectSerializer(serializers.ModelSerializer):
 class ProjectListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Project
-        fields = ('id', 'name', 'description', 'created_at', 'updated_at', 'ai_tools', 'status', 'output_type')
+        fields = ('id', 'name', 'description', 'created_at', 'updated_at', 'ai_tools', 'status', 'output_type', 'repository_name')
         read_only_fields = fields
+
+
+class PlanMessageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PlanMessage
+        fields = '__all__'
+        read_only_fields = ('project', 'created_at')
+
+
+class StatusItemSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = StatusItem
+        fields = '__all__'
+        read_only_fields = ('project', 'created_at', 'updated_at')
+
+
+class DocumentationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Documentation
+        fields = '__all__'
+        read_only_fields = ('project', 'generated_at', 'updated_at')
 
