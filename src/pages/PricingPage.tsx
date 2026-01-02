@@ -185,7 +185,7 @@ export default function PricingPage() {
       try {
         const data = await api.getPlans()
         // Transform API data to match component format
-        const transformedPlans = data.map((plan: any) => ({
+        const transformedPlans = (data as any[]).map((plan: any) => ({
           id: plan.id,
           title: plan.name,
           price: billingPeriod === "monthly" 

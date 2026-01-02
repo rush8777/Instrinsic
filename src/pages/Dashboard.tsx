@@ -173,10 +173,10 @@ export default function Dashboard() {
         // Handle both paginated (with results) and non-paginated (direct array) responses
         const projectsList = Array.isArray(projectsData) 
           ? projectsData 
-          : (projectsData.results || projectsData.data || [])
+          : ((projectsData as any).results || (projectsData as any).data || [])
         console.log("Projects loaded:", projectsList)
         setProjects(projectsList)
-        setReferralLink(referralData.referral_link || "")
+        setReferralLink((referralData as any).referral_link || "")
       } catch (error: any) {
         if (error.message.includes("401") || error.message.includes("Unauthorized")) {
           navigate("/login")

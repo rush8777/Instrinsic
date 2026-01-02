@@ -37,7 +37,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         return;
       }
 
-      const userData = await api.getCurrentUser();
+      const userData = await api.getCurrentUser() as User;
       setUser(userData);
     } catch (error) {
       // Token invalid or expired
@@ -70,7 +70,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const refreshUser = async () => {
     try {
-      const userData = await api.getCurrentUser();
+      const userData = await api.getCurrentUser() as User;
       setUser(userData);
     } catch (error) {
       setUser(null);
