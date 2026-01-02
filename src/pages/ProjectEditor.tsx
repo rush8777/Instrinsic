@@ -13,6 +13,12 @@ import { api } from "@/lib/api"
 import { toast } from "sonner"
 
 // TypeScript types
+interface ContentBlock {
+  id: string
+  type: string
+  content: string
+}
+
 interface Project {
   id: number
   name: string
@@ -25,8 +31,9 @@ interface Project {
   created_at?: string
   updated_at?: string
   content_blocks?: ContentBlock[]
-  content?: string // Keep for backward compatibility during migration
-  [key: string]: any // Allow other project properties
+  content?: string
+  repository_name?: string
+  [key: string]: any
 }
 
 import {
