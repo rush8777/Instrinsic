@@ -5,9 +5,10 @@ import { ScaleCard } from "./cards"
 import { ScaleButton } from "./buttons"
 import { ScaleInput, ScaleTextarea } from "./inputs"
 import { H3, Body } from "./typography"
+import { CodeSnippetCard } from "./CodeSnippetCard"
 import { api } from "@/lib/api"
 import { toast } from "sonner"
-import { CheckSquare, Plus, Square } from "lucide-react"
+import { Plus } from "lucide-react"
 import { Checkbox } from "@/components/ui/checkbox"
 
 interface EditorStatusProps {
@@ -159,13 +160,25 @@ export function EditorStatus({ projectId }: EditorStatusProps) {
 
           {items.length === 0 ? (
             <div className="flex items-center justify-center min-h-[400px]">
-              <div className="text-center">
-                <CheckSquare className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
-                <H3 className="text-xl font-semibold mb-2">No Status Items</H3>
-                <Body className="text-muted-foreground">
-                  Add items to track your project progress
-                </Body>
-              </div>
+              <CodeSnippetCard className="max-w-md w-full" showActions={false}>
+                <div className="space-y-4 text-center">
+                  <div className="space-y-2">
+                    <p className="text-foreground font-mono text-lg">No Status Items</p>
+                    <p className="text-muted-foreground font-mono text-sm">
+                      Add items to track your project progress
+                    </p>
+                  </div>
+                  <ScaleButton
+                    variant="primary"
+                    size="sm"
+                    onClick={() => setShowAddForm(true)}
+                    className="mx-auto"
+                  >
+                    <Plus className="w-4 h-4 mr-2" />
+                    Add Item
+                  </ScaleButton>
+                </div>
+              </CodeSnippetCard>
             </div>
           ) : (
             <div className="space-y-3">
@@ -209,4 +222,3 @@ export function EditorStatus({ projectId }: EditorStatusProps) {
     </div>
   )
 }
-

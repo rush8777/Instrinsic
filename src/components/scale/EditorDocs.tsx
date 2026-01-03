@@ -4,6 +4,7 @@ import { useState, useEffect } from "react"
 import { ScaleButton } from "./buttons"
 import { ScaleCard } from "./cards"
 import { H3, Body } from "./typography"
+import { CodeSnippetCard } from "./CodeSnippetCard"
 import { api } from "@/lib/api"
 import { toast } from "sonner"
 import { FileCode, File, Folder, FolderOpen, ChevronRight, ChevronDown } from "lucide-react"
@@ -144,23 +145,26 @@ export function EditorDocs({ projectId }: EditorDocsProps) {
       <div className="flex-1 overflow-y-auto scrollbar-thin p-6">
         {!docs || !docs.file_tree || docs.file_tree.length === 0 ? (
           <div className="flex items-center justify-center h-full">
-            <div className="flex flex-col items-center gap-4 text-center">
-              <div className="flex items-center justify-center w-16 h-16 rounded-full bg-secondary">
-                <FileCode className="w-8 h-8 text-foreground" />
+            <CodeSnippetCard className="max-w-md w-full" showActions={false}>
+              <div className="space-y-4 text-center">
+                <div className="space-y-2">
+                  <p className="text-foreground font-mono text-lg">No Documentation</p>
+                  <p className="text-muted-foreground font-mono text-sm">
+                    Initialize documentation to generate a file-by-file overview of your project
+                  </p>
+                </div>
+                <ScaleButton
+                  variant="primary"
+                  size="md"
+                  onClick={handleInitialize}
+                  disabled={generating}
+                  className="mx-auto"
+                >
+                  <FileCode className="w-4 h-4 mr-2" />
+                  {generating ? "Generating..." : "Initialize Documentation"}
+                </ScaleButton>
               </div>
-              <H3 className="text-xl font-semibold">No Documentation</H3>
-              <Body className="text-muted-foreground max-w-md">
-                Initialize documentation to generate a file-by-file overview of your project
-              </Body>
-              <ScaleButton
-                variant="primary"
-                size="md"
-                onClick={handleInitialize}
-                disabled={generating}
-              >
-                {generating ? "Generating..." : "Initialize Documentation"}
-              </ScaleButton>
-            </div>
+            </CodeSnippetCard>
           </div>
         ) : (
           <div className="max-w-4xl mx-auto space-y-6">
@@ -181,4 +185,3 @@ export function EditorDocs({ projectId }: EditorDocsProps) {
     </div>
   )
 }
-
