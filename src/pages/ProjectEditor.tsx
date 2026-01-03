@@ -36,24 +36,6 @@ interface Project {
   [key: string]: any
 }
 
-<<<<<<< HEAD
-=======
-import {
-  ArrowLeft,
-  Save,
-  MoreVertical,
-  Share2,
-  PanelLeft,
-} from "lucide-react"
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
->>>>>>> d1d0c5a788f2b0c89c791fe5da9adaf1875db178
-
 export default function ProjectEditor() {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false)
   const [project, setProject] = useState<Project | null>(null)
@@ -171,96 +153,11 @@ export default function ProjectEditor() {
 
   return (
     <div className="flex flex-col h-screen bg-background overflow-hidden">
-<<<<<<< HEAD
       {/* Simple Header */}
       <SimpleHeader 
         projectName={project?.name}
         projectStatus="Previewing last saved version"
       />
-=======
-      {/* Sticky Header */}
-      <header className="sticky top-0 z-50 border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-        <div className="flex items-center justify-between h-14 px-4 md:px-6">
-          {/* Left Side */}
-          <div className="flex items-center gap-4 flex-1 min-w-0">
-            <IconButton
-              variant="ghost"
-              size="sm"
-              onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
-              className="flex-shrink-0"
-            >
-              <PanelLeft className="w-4 h-4" />
-            </IconButton>
-            <IconButton
-              variant="ghost"
-              size="sm"
-              onClick={() => navigate("/dashboard")}
-              className="flex-shrink-0"
-            >
-              <ArrowLeft className="w-4 h-4" />
-            </IconButton>
-            <div className="flex-1 min-w-0">
-              <h1 className="text-lg font-semibold text-foreground truncate">
-                {project?.name || "Untitled Project"}
-              </h1>
-              {project?.description && (
-                <p className="text-xs text-muted-foreground truncate">
-                  {project.description}
-                </p>
-              )}
-            </div>
-          </div>
-
-          {/* Right Side - Actions */}
-          <div className="flex items-center gap-2 flex-shrink-0">
-            {generating && (
-              <span className="text-sm text-muted-foreground">Generating prompts...</span>
-            )}
-            <ScaleButton
-              variant="secondary"
-              size="sm"
-              onClick={handleSave}
-              className="gap-2"
-              disabled={generating}
-            >
-              <Save className="w-4 h-4" />
-              Save
-            </ScaleButton>
-            
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <IconButton variant="ghost" size="sm">
-                  <MoreVertical className="w-4 h-4" />
-                </IconButton>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuItem className="gap-2">
-                  <Share2 className="w-4 h-4" />
-                  Share Project
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem 
-                  className="text-destructive"
-                  onClick={async () => {
-                    if (confirm("Are you sure you want to delete this project?")) {
-                      try {
-                        await api.deleteProject(project.id)
-                        toast.success("Project deleted")
-                        navigate("/dashboard")
-                      } catch (error) {
-                        toast.error("Failed to delete project")
-                      }
-                    }
-                  }}
-                >
-                  Delete Project
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </div>
-        </div>
-      </header>
->>>>>>> d1d0c5a788f2b0c89c791fe5da9adaf1875db178
 
       {/* Main Content - Fixed height, no scroll */}
       <div className="flex flex-1 overflow-hidden">
