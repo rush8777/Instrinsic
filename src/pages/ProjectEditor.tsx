@@ -41,6 +41,7 @@ import {
   Save,
   MoreVertical,
   Share2,
+  PanelLeft,
 } from "lucide-react"
 import {
   DropdownMenu,
@@ -182,6 +183,14 @@ export default function ProjectEditor() {
         <div className="flex items-center justify-between h-14 px-4 md:px-6">
           {/* Left Side */}
           <div className="flex items-center gap-4 flex-1 min-w-0">
+            <IconButton
+              variant="ghost"
+              size="sm"
+              onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
+              className="flex-shrink-0"
+            >
+              <PanelLeft className="w-4 h-4" />
+            </IconButton>
             <IconButton
               variant="ghost"
               size="sm"
