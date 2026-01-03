@@ -7,6 +7,7 @@ import { EditorLibrary } from "@/components/scale/EditorLibrary"
 import { EditorPlans } from "@/components/scale/EditorPlans"
 import { EditorStatus } from "@/components/scale/EditorStatus"
 import { EditorDocs } from "@/components/scale/EditorDocs"
+import { EditorSidebar } from "@/components/scale/EditorSidebar"
 import { SimpleHeader } from "@/components/scale/header"
 import { api } from "@/lib/api"
 import { toast } from "sonner"
@@ -159,6 +160,9 @@ export default function ProjectEditor() {
 
       {/* Main Content - Fixed height, no scroll */}
       <div className="flex flex-1 overflow-hidden">
+        {/* Sidebar */}
+        <EditorSidebar collapsed={false} onToggleCollapse={() => {}} />
+        
         {/* Section Content */}
         <div className="flex flex-1 flex-col min-w-0 overflow-hidden">
           {project && (
