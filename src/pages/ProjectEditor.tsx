@@ -3,7 +3,6 @@
 import React, { useState, useEffect, useCallback, useRef } from "react"
 import { useNavigate, useParams } from "react-router-dom"
 import { ProjectEditorSkeleton } from "@/components/scale/ProjectEditorSkeleton"
-import { EditorSidebar } from "@/components/scale/EditorSidebar"
 import { EditorLibrary } from "@/components/scale/EditorLibrary"
 import { EditorPlans } from "@/components/scale/EditorPlans"
 import { EditorStatus } from "@/components/scale/EditorStatus"
@@ -37,7 +36,6 @@ interface Project {
 }
 
 export default function ProjectEditor() {
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false)
   const [project, setProject] = useState<Project | null>(null)
   const [loading, setLoading] = useState(true)
   const [generating, setGenerating] = useState(false)
@@ -161,12 +159,6 @@ export default function ProjectEditor() {
 
       {/* Main Content - Fixed height, no scroll */}
       <div className="flex flex-1 overflow-hidden">
-        {/* Editor Sidebar */}
-        <EditorSidebar
-          collapsed={sidebarCollapsed}
-          onToggleCollapse={() => setSidebarCollapsed(!sidebarCollapsed)}
-        />
-
         {/* Section Content */}
         <div className="flex flex-1 flex-col min-w-0 overflow-hidden">
           {project && (

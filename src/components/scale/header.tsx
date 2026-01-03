@@ -1,6 +1,7 @@
 import type React from "react"
 import { cn } from "@/lib/utils"
 import { useState } from "react"
+import * as React from "react"
 import { Link, useNavigate } from "react-router-dom"
 import { ScaleButton } from "./buttons"
 import { 
@@ -38,6 +39,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { IconButton } from "./buttons"
+import { HoverSidebar } from "./HoverSidebar"
 
 
 interface NavItem {
@@ -315,6 +317,8 @@ export function SimpleHeader({
 }) {
   const { isAuthenticated, user, logout } = useAuth()
   const navigate = useNavigate()
+  const [sidebarVisible, setSidebarVisible] = useState(false)
+  const hideTimeoutRef = React.useRef<NodeJS.Timeout | null>(null)
 
   const handleLogout = () => {
     logout()
@@ -325,26 +329,58 @@ export function SimpleHeader({
     return email.substring(0, 2).toUpperCase()
   }
 
+  const handleMouseEnter = () => {
+    if (hideTimeoutRef.current) {
+      clearTimeout(hideTimeoutRef.current)
+      hideTimeoutRef.current = null
+    }
+    setSidebarVisible(true)
+  }
+
+  const handleMouseLeave = () => {
+    hideTimeoutRef.current = setTimeout(() => {
+      setSidebarVisible(false)
+    }, 200) // Small delay to allow moving mouse to sidebar
+  }
+
+  React.useEffect(() => {
+    return () => {
+      if (hideTimeoutRef.current) {
+        clearTimeout(hideTimeoutRef.current)
+      }
+    }
+  }, [])
+
   return (
-    <header className={cn("border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60", className)}>
-      <div className="flex items-center justify-between h-14 px-4 md:px-6 gap-4">
-        {/* Left Section */}
-        <div className="flex items-center gap-4 flex-1 min-w-0">
-          {/* Logo - Heart with gradient */}
-          <div className="flex-shrink-0 relative">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" className="w-5 h-5">
-              <defs>
-                <linearGradient id="heart-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                  <stop offset="0%" stopColor="#f97316" />
-                  <stop offset="100%" stopColor="#a855f7" />
-                </linearGradient>
-              </defs>
-              <path
-                d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"
-                fill="url(#heart-gradient)"
-              />
-            </svg>
-          </div>
+    <>
+      <HoverSidebar 
+        isVisible={sidebarVisible}
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
+      />
+      <header className={cn("border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60", className)}>
+        <div className="flex items-center justify-between h-14 px-4 md:px-6 gap-4">
+          {/* Left Section */}
+          <div className="flex items-center gap-4 flex-1 min-w-0">
+            {/* Logo - Heart with gradient - Hoverable */}
+            <div 
+              className="flex-shrink-0 relative cursor-pointer"
+              onMouseEnter={handleMouseEnter}
+              onMouseLeave={handleMouseLeave}
+            >
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" className="w-5 h-5">
+                <defs>
+                  <linearGradient id="heart-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" stopColor="#f97316" />
+                    <stop offset="100%" stopColor="#a855f7" />
+                  </linearGradient>
+                </defs>
+                <path
+                  d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"
+                  fill="url(#heart-gradient)"
+                />
+              </svg>
+            </div>
 
           {/* Project Name with Dropdown */}
           <DropdownMenu>
@@ -524,5 +560,6 @@ export function SimpleHeader({
         </div>
       </div>
     </header>
+    </>
   )
 }
