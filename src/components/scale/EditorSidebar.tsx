@@ -36,8 +36,8 @@ export function EditorSidebar({ collapsed, onToggleCollapse }: EditorSidebarProp
   return (
     <div 
       className={cn(
-        "hidden md:flex flex-col bg-muted/30 border-r border-border transition-all duration-300 overflow-y-auto",
-        collapsed ? "w-14" : "w-64"
+        "flex flex-col bg-muted/30 border-r border-border transition-all duration-300 overflow-y-auto",
+        collapsed ? "w-0 md:w-14 overflow-hidden" : "w-64"
       )}
     >
       {/* Sidebar Header */}
