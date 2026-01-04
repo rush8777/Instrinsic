@@ -5,6 +5,7 @@ import { ScaleButton } from "./buttons"
 import { ScaleCard } from "./cards"
 import { H3, Body } from "./typography"
 import { CodeSnippetCard } from "./CodeSnippetCard"
+import { BackgroundBeams } from "@/components/ui/background-beams"
 import { api } from "@/lib/api"
 import { toast } from "sonner"
 import { FileCode, File, Folder, FolderOpen, ChevronRight, ChevronDown } from "lucide-react"
@@ -144,8 +145,9 @@ export function EditorDocs({ projectId }: EditorDocsProps) {
     <div className="flex flex-1 flex-col min-w-0 overflow-hidden">
       <div className="flex-1 overflow-y-auto scrollbar-thin p-6">
         {!docs || !docs.file_tree || docs.file_tree.length === 0 ? (
-          <div className="flex items-center justify-center h-full">
-            <CodeSnippetCard className="max-w-md w-full" showActions={false}>
+          <div className="relative flex items-center justify-center h-full">
+            <BackgroundBeams />
+            <CodeSnippetCard className="max-w-md w-full relative z-10" showActions={false}>
               <div className="space-y-4 text-center">
                 <div className="space-y-2">
                   <p className="text-foreground font-mono text-lg">No Documentation</p>

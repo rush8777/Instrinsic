@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from "react"
 import { H3, Body, BodySmall } from "./typography"
 import { IconButton } from "./buttons"
+import { BackgroundBeams } from "@/components/ui/background-beams"
 import { api } from "@/lib/api"
 import { toast } from "sonner"
 import { cn } from "@/lib/utils"
@@ -225,11 +226,12 @@ export function EditorPlans({ projectId }: EditorPlansProps) {
             <Body className="text-muted-foreground">Loading...</Body>
           </div>
         ) : messages.length === 0 ? (
-          <div className="flex flex-col items-center justify-center h-full gap-6 px-4 pb-24">
-            <H3 className="text-3xl font-medium text-foreground">What can I help with?</H3>
+          <div className="relative flex flex-col items-center justify-center h-full gap-6 px-4 pb-24">
+            <BackgroundBeams />
+            <H3 className="text-3xl font-medium text-foreground relative z-10">What can I help with?</H3>
             
             {/* Input Area - Centered */}
-            <div className="w-full max-w-2xl">
+            <div className="w-full max-w-2xl relative z-10">
               <div className="relative flex items-end rounded-2xl border border-border/50 backdrop-blur-xl bg-muted/20 p-2 focus-within:border-primary/50 shadow-lg transition-all">
                 <textarea
                   ref={textareaRef}
@@ -282,7 +284,7 @@ export function EditorPlans({ projectId }: EditorPlansProps) {
             </div>
 
             {/* Quick Actions */}
-            <div className="flex flex-wrap items-center justify-center gap-2 mt-2">
+            <div className="flex flex-wrap items-center justify-center gap-2 mt-2 relative z-10">
               {quickActions.map((action, i) => (
                 <button
                   key={i}

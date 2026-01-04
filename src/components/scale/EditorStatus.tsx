@@ -6,6 +6,7 @@ import { ScaleButton } from "./buttons"
 import { ScaleInput, ScaleTextarea } from "./inputs"
 import { H3, Body } from "./typography"
 import { CodeSnippetCard } from "./CodeSnippetCard"
+import { BackgroundBeams } from "@/components/ui/background-beams"
 import { api } from "@/lib/api"
 import { toast } from "sonner"
 import { Plus } from "lucide-react"
@@ -159,8 +160,9 @@ export function EditorStatus({ projectId }: EditorStatusProps) {
           )}
 
           {items.length === 0 ? (
-            <div className="flex items-center justify-center min-h-[400px]">
-              <CodeSnippetCard className="max-w-md w-full" showActions={false}>
+            <div className="relative flex items-center justify-center min-h-[400px]">
+              <BackgroundBeams />
+              <CodeSnippetCard className="max-w-md w-full relative z-10" showActions={false}>
                 <div className="space-y-4 text-center">
                   <div className="space-y-2">
                     <p className="text-foreground font-mono text-lg">No Status Items</p>
