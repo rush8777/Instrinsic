@@ -38,38 +38,52 @@ interface SubsectionItem {
   children?: SubsectionItem[]
 }
 
-// Mock subsections for each section
+// Mock subsections tailored per section (purely UI, no backend wiring yet)
 const librarySubsections: SubsectionItem[] = [
-  { id: "prompts", label: "prompts", type: "folder", children: [
-    { id: "initial-setup", label: "initial-setup.md", type: "file" },
-    { id: "ui-components", label: "ui-components.md", type: "file" },
-    { id: "api-integration", label: "api-integration.md", type: "file" },
-  ]},
-  { id: "templates", label: "templates", type: "folder", children: [
-    { id: "auth-template", label: "auth-template.md", type: "file" },
-    { id: "dashboard-template", label: "dashboard-template.md", type: "file" },
-  ]},
+  {
+    id: "prompts",
+    label: "Prompts",
+    type: "folder",
+    children: [
+      { id: "changed-logo", label: "Changed logo", type: "file" },
+      { id: "create-login", label: "Create Login", type: "file" },
+      { id: "created-backend-logic", label: "Created Backend Logic", type: "file" },
+    ],
+  },
 ]
 
 const plansSubsections: SubsectionItem[] = [
-  { id: "active", label: "active", type: "folder", children: [
-    { id: "feature-roadmap", label: "feature-roadmap.md", type: "file" },
-    { id: "refactor-plan", label: "refactor-plan.md", type: "file" },
-  ]},
-  { id: "archived", label: "archived", type: "folder", children: [
-    { id: "v1-plan", label: "v1-plan.md", type: "file" },
-  ]},
+  {
+    id: "history",
+    label: "History",
+    type: "folder",
+    children: [
+      { id: "chat-one", label: "Chat Name", type: "file" },
+      { id: "chat-two", label: "Chat Name", type: "file" },
+    ],
+  },
 ]
 
 const docsSubsections: SubsectionItem[] = [
-  { id: "src", label: "src", type: "folder", children: [
-    { id: "components", label: "components", type: "folder", children: [
-      { id: "ui", label: "ui", type: "folder" },
-      { id: "scale", label: "scale", type: "folder" },
-    ]},
-    { id: "pages", label: "pages", type: "folder" },
-    { id: "hooks", label: "hooks", type: "folder" },
-  ]},
+  {
+    id: "src",
+    label: "src",
+    type: "folder",
+    children: [
+      {
+        id: "components",
+        label: "components",
+        type: "folder",
+        children: [
+          { id: "ui", label: "ui", type: "folder" },
+          { id: "scale", label: "scale", type: "folder" },
+        ],
+      },
+      { id: "pages", label: "pages", type: "folder" },
+      { id: "hooks", label: "hooks", type: "folder" },
+      { id: "assets", label: "assets", type: "folder" },
+    ],
+  },
   { id: "readme", label: "README.md", type: "file" },
 ]
 
@@ -194,85 +208,7 @@ export function EditorSidebar({ collapsed, onToggleCollapse }: EditorSidebarProp
   return (
     <TooltipProvider delayDuration={0}>
       <div className="flex h-full">
-        {/* Icon sidebar */}
-        <div className="flex flex-col w-14 bg-muted/50 border-r border-border h-full">
-          {/* Top Section - Home & Search */}
-          <div className="flex flex-col items-center gap-1 pt-3 pb-2 border-b border-border/50">
-            {topIcons.map((item) => (
-              <Tooltip key={item.id}>
-                <TooltipTrigger asChild>
-                  <button
-                    onClick={() => handleIconClick(item)}
-                    className={cn(
-                      "w-10 h-10 flex items-center justify-center rounded-lg transition-colors",
-                      "text-muted-foreground hover:text-foreground hover:bg-secondary/50"
-                    )}
-                  >
-                    {item.icon}
-                  </button>
-                </TooltipTrigger>
-                <TooltipContent side="right" sideOffset={8}>
-                  {item.label}
-                </TooltipContent>
-              </Tooltip>
-            ))}
-          </div>
-
-          {/* Main Sections */}
-          <div className="flex-1 flex flex-col items-center gap-1 py-3">
-            {sections.map((item) => (
-              <Tooltip key={item.id}>
-                <TooltipTrigger asChild>
-                  <button
-                    onClick={() => handleSectionClick(item.path)}
-                    className={cn(
-                      "w-10 h-10 flex items-center justify-center rounded-lg transition-colors",
-                      section === item.id
-                        ? "bg-primary text-primary-foreground"
-                        : "text-muted-foreground hover:text-foreground hover:bg-secondary/50"
-                    )}
-                  >
-                    {item.icon}
-                  </button>
-                </TooltipTrigger>
-                <TooltipContent side="right" sideOffset={8}>
-                  {item.label}
-                </TooltipContent>
-              </Tooltip>
-            ))}
-          </div>
-
-          {/* Bottom Section */}
-          <div className="flex flex-col items-center gap-1 py-3 border-t border-border/50">
-            {bottomIcons.map((item) => (
-              <Tooltip key={item.id}>
-                <TooltipTrigger asChild>
-                  <button
-                    onClick={() => handleIconClick(item as typeof topIcons[0])}
-                    className={cn(
-                      "w-10 h-10 flex items-center justify-center rounded-lg transition-colors",
-                      "text-muted-foreground hover:text-foreground hover:bg-secondary/50"
-                    )}
-                  >
-                    {item.icon}
-                  </button>
-                </TooltipTrigger>
-                <TooltipContent side="right" sideOffset={8}>
-                  {item.label}
-                </TooltipContent>
-              </Tooltip>
-            ))}
-
-            {/* User Avatar */}
-            <div className="mt-2">
-              <div className="w-8 h-8 rounded-full bg-gradient-to-br from-primary/80 to-primary flex items-center justify-center text-primary-foreground text-sm font-medium">
-                U
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Expandable tree panel */}
+        {/* Tree panel only (small icon sidebar removed) */}
         <div className="w-56 bg-muted/30 border-r border-border h-full overflow-y-auto">
           <div className="py-2">
             {sections.map((sectionItem) => {
@@ -305,6 +241,18 @@ export function EditorSidebar({ collapsed, onToggleCollapse }: EditorSidebarProp
                     )}
                     <span className="uppercase text-xs tracking-wider">{sectionItem.label}</span>
                   </button>
+
+                  {/* Plans-only action */}
+                  {sectionItem.id === "plans" && (
+                    <div className="px-3 pb-2">
+                      <button
+                        className="w-full rounded-md bg-primary text-primary-foreground text-sm font-medium py-1.5 hover:bg-primary/90 transition-colors"
+                        onClick={() => {}}
+                      >
+                        New Plan
+                      </button>
+                    </div>
+                  )}
 
                   {/* Subsections */}
                   {hasSubsections && isExpanded && (

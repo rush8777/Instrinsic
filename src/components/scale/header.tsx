@@ -8,6 +8,7 @@ import {
   X, 
   ChevronDown, 
   ChevronLeft,
+  ChevronRight,
   User, 
   LogOut, 
   Settings,
@@ -25,7 +26,12 @@ import {
   RefreshCw,
   Share2,
   Zap,
-  Upload
+  Upload,
+  Eye,
+  Code2,
+  Database,
+  Github,
+  Lock,
 } from "lucide-react"
 import { useAuth } from "@/contexts/AuthContext"
 import {
@@ -96,7 +102,8 @@ export function ScaleHeader({ logo, navItems = defaultNavItems, className }: Hea
   }
 
   return (
-    <header className={cn("relative z-50", className)}>
+    <>
+      <header className={cn("relative z-50", className)}>
       {/* Announcement Bar */}
       <div className="bg-secondary border-b border-border">
         <div className="max-w-7xl mx-auto px-4 md:px-6 py-2.5">
@@ -298,7 +305,8 @@ export function ScaleHeader({ logo, navItems = defaultNavItems, className }: Hea
           </nav>
         </div>
       )}
-    </header>
+      </header>
+    </>
   )
 }
 
@@ -317,7 +325,7 @@ export function SimpleHeader({
   const { isAuthenticated, user, logout } = useAuth()
   const navigate = useNavigate()
   const [sidebarVisible, setSidebarVisible] = useState(false)
-  const hideTimeoutRef = React.useRef<NodeJS.Timeout | null>(null)
+  const hideTimeoutRef = React.useRef<ReturnType<typeof setTimeout> | null>(null)
 
   const handleLogout = () => {
     logout()
@@ -352,135 +360,93 @@ export function SimpleHeader({
 
   return (
     <>
+      {/* Invisible hover zone to reveal the sidebar when moving to the far left */}
+      <div
+        className="fixed inset-y-0 left-0 w-2 z-40"
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
+        aria-hidden="true"
+      />
       <HoverSidebar 
         isVisible={sidebarVisible}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
       />
-      <header className={cn("border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60", className)}>
+      <header className={cn("border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/70", className)}>
         <div className="flex items-center justify-between h-14 px-4 md:px-6 gap-4">
-          {/* Left Section */}
-          <div className="flex items-center gap-4 flex-1 min-w-0">
-            {/* Logo - Heart with gradient - Hoverable */}
-            <div 
-              className="flex-shrink-0 relative cursor-pointer"
-              onMouseEnter={handleMouseEnter}
-              onMouseLeave={handleMouseLeave}
-            >
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" className="w-5 h-5">
-                <defs>
-                  <linearGradient id="heart-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                    <stop offset="0%" stopColor="#f97316" />
-                    <stop offset="100%" stopColor="#a855f7" />
-                  </linearGradient>
-                </defs>
-                <path
-                  d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"
-                  fill="url(#heart-gradient)"
-                />
-              </svg>
-            </div>
-
-          {/* Project Name with Dropdown */}
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <button className="flex items-center gap-1.5 hover:opacity-80 transition-opacity">
-                <span className="text-base font-semibold text-foreground whitespace-nowrap">
-                  {projectName || "Untitled Project"}
-                </span>
-                <ChevronDown className="w-4 h-4 text-foreground" />
-              </button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="start" className="w-56">
-              <DropdownMenuItem asChild>
-                <Link to="/dashboard" className="cursor-pointer">
-                  <User className="mr-2 h-4 w-4" />
-                  Dashboard
-                </Link>
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={handleLogout} className="cursor-pointer text-destructive">
-                <LogOut className="mr-2 h-4 w-4" />
-                Log out
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-
-          {/* Status Text */}
-          <span className="text-xs text-muted-foreground whitespace-nowrap hidden md:block">
-            {projectStatus || "Previewing last saved version"}
-          </span>
-
-          {/* Action Icons */}
-          <div className="flex items-center gap-2 flex-shrink-0">
-            <IconButton variant="ghost" size="sm" title="History">
-              <RotateCcw className="w-4 h-4" />
-            </IconButton>
-            <IconButton variant="ghost" size="sm" title="Save">
-              <Save className="w-4 h-4" />
-            </IconButton>
-          </div>
-
-          {/* Preview Button */}
-          <ScaleButton
-            variant="primary"
-            size="sm"
-            className="bg-blue-600 hover:bg-blue-700 text-white gap-2 flex-shrink-0"
+          <div 
+            className="flex items-center gap-3 min-w-0"
+            onMouseEnter={handleMouseEnter}
+            onMouseLeave={handleMouseLeave}
           >
-            <Globe className="w-4 h-4" />
-            Preview
-          </ScaleButton>
+            {logo ? (
+              <div className="flex items-center justify-center h-9 w-9 rounded-xl bg-secondary text-foreground">
+                {logo}
+              </div>
+            ) : (
+              <div className="flex items-center justify-center h-9 w-9 rounded-xl bg-gradient-to-br from-amber-500 via-fuchsia-500 to-indigo-500 text-background font-semibold">
+                b
+              </div>
+            )}
 
-          {/* Feature Icons */}
-          <div className="flex items-center gap-1.5 flex-shrink-0 hidden lg:flex">
-            <IconButton variant="ghost" size="sm" title="Cloud">
-              <Cloud className="w-4 h-4" />
-            </IconButton>
-            <IconButton variant="ghost" size="sm" title="Design">
-              <Palette className="w-4 h-4" />
-            </IconButton>
-            <IconButton variant="ghost" size="sm" title="Code">
-              <Code className="w-4 h-4" />
-            </IconButton>
-            <IconButton variant="ghost" size="sm" title="Analytics">
-              <TrendingUp className="w-4 h-4" />
-            </IconButton>
-          </div>
-
-          {/* Add Icon */}
-          <IconButton variant="ghost" size="sm" title="Add">
-            <Plus className="w-4 h-4" />
-          </IconButton>
-        </div>
-
-        {/* Middle Section - Search/Command Input */}
-        <div className="flex-1 max-w-md mx-4 hidden md:flex">
-          <div className="relative w-full">
-            <div className="absolute left-3 top-1/2 -translate-y-1/2 flex items-center gap-1">
-              <Laptop className="w-4 h-4 text-muted-foreground" />
-              <span className="text-muted-foreground text-sm">/</span>
-            </div>
-            <input
-              type="text"
-              placeholder=""
-              className="w-full h-9 pl-10 pr-20 rounded-lg border border-border bg-muted/30 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent text-sm"
-            />
-            <div className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-1">
-              <IconButton variant="ghost" size="sm" className="h-6 w-6">
-                <Maximize2 className="w-3.5 h-3.5" />
-              </IconButton>
-              <IconButton variant="ghost" size="sm" className="h-6 w-6">
-                <RefreshCw className="w-3.5 h-3.5" />
-              </IconButton>
+            <div className="flex flex-col min-w-0">
+              <div className="flex items-center gap-2 min-w-0">
+                <span className="text-sm font-semibold text-foreground truncate">
+                  {projectName || "Advanced React NPM Live Editor"}
+                </span>
+                <Lock className="w-4 h-4 text-muted-foreground flex-shrink-0" />
+              </div>
+              <span className="text-xs text-muted-foreground truncate">
+                {projectStatus || "Previewing last saved version"}
+              </span>
             </div>
           </div>
-        </div>
 
-        {/* Right Section */}
-        <div className="flex items-center gap-2 flex-shrink-0">
-          {isAuthenticated ? (
-            <>
-              {/* User Avatar */}
+          <div className="hidden lg:flex items-center justify-center gap-2 text-xs text-muted-foreground flex-1">
+            <span>Preview mode</span>
+            <span className="h-1 w-1 rounded-full bg-muted-foreground/60" />
+            <span>{projectStatus || "Last saved moments ago"}</span>
+          </div>
+
+          <div className="flex items-center gap-2 flex-shrink-0">
+            <IconButton variant="ghost" size="sm" title="Preview">
+              <Eye className="w-4 h-4" />
+            </IconButton>
+            <div className="hidden md:flex items-center gap-1">
+              <IconButton variant="ghost" size="sm" title="Back">
+                <ChevronLeft className="w-4 h-4" />
+              </IconButton>
+              <IconButton variant="ghost" size="sm" title="Forward">
+                <ChevronRight className="w-4 h-4" />
+              </IconButton>
+              <div className="h-4 w-px bg-border mx-1" />
+              <IconButton variant="ghost" size="sm" title="Code view">
+                <Code2 className="w-4 h-4" />
+              </IconButton>
+              <IconButton variant="ghost" size="sm" title="Data">
+                <Database className="w-4 h-4" />
+              </IconButton>
+              <IconButton variant="ghost" size="sm" title="Settings">
+                <Settings className="w-4 h-4" />
+              </IconButton>
+            </div>
+
+            <ScaleButton
+              variant="secondary"
+              size="sm"
+              className="bg-muted hover:bg-muted/80 text-foreground"
+            >
+              Share
+            </ScaleButton>
+            <ScaleButton
+              variant="primary"
+              size="sm"
+              className="bg-foreground text-background hover:bg-foreground/90"
+            >
+              Publish
+            </ScaleButton>
+
+            {isAuthenticated ? (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <button className="flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-br from-amber-200 to-amber-400 focus:outline-none focus:ring-2 focus:ring-accent">
@@ -512,53 +478,14 @@ export function SimpleHeader({
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
-
-              {/* Share Button */}
-              <ScaleButton
-                variant="secondary"
-                size="sm"
-                className="bg-muted hover:bg-muted/80 text-foreground"
-              >
-                Share
+            ) : (
+              <ScaleButton variant="ghost" size="sm" onClick={() => navigate("/login")} className="hidden sm:inline-flex">
+                Log in
               </ScaleButton>
-
-              {/* Lightning Icon */}
-              <div className="flex items-center justify-center w-6 h-6">
-                <Zap className="w-4 h-4 text-green-500" fill="currentColor" />
-              </div>
-
-              {/* Upgrade Button */}
-              <ScaleButton
-                variant="secondary"
-                size="sm"
-                className="bg-purple-600/20 hover:bg-purple-600/30 text-foreground border-purple-600/30 gap-2"
-              >
-                <Zap className="w-4 h-4" />
-                Upgrade
-              </ScaleButton>
-
-              {/* Publish Button */}
-              <ScaleButton
-                variant="primary"
-                size="sm"
-                className="bg-blue-600 hover:bg-blue-700 text-white"
-              >
-                Publish
-              </ScaleButton>
-            </>
-          ) : (
-            <>
-              <ScaleButton variant="primary" size="sm" withArrow onClick={() => navigate("/signup")}>
-                Get Started
-              </ScaleButton>
-              <Link to="/login" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-                Log In
-              </Link>
-            </>
-          )}
+            )}
+          </div>
         </div>
-      </div>
-    </header>
+      </header>
     </>
   )
 }
