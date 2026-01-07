@@ -13,7 +13,11 @@ import {
   Globe, 
   Cpu,
   ArrowRight,
-  Play
+  Play,
+  FileText,
+  Palette,
+  RefreshCw,
+  MousePointer
 } from "lucide-react";
 import { NetworkAnimation } from "@/components/scale/NetworkAnimation";
 import { LogoMarquee } from "@/components/scale/LogoMarquee";
@@ -67,6 +71,93 @@ const Index = () => {
           {/* Hero Visual - Tilted Editor Preview */}
           <div className="mt-20 relative">
             <EditorPreview className="opacity-0 animate-fade-in-up animation-delay-600" />
+          </div>
+
+          {/* Centered Text After Preview */}
+          <div className="mt-20 text-center max-w-3xl mx-auto">
+            <p className="text-lg md:text-xl text-muted-foreground leading-relaxed">
+              From concept to production in minutes. Our AI understands your vision, 
+              writes clean code, and deploys seamlessly—letting you focus on what matters most.
+            </p>
+          </div>
+
+          {/* Generate Feature Section */}
+          <div className="mt-24 grid lg:grid-cols-2 gap-12 items-center">
+            {/* Video Card */}
+            <div className="relative">
+              <div className="bg-gradient-to-br from-violet-500/5 via-blue-500/5 to-transparent rounded-3xl p-1">
+                <div className="bg-secondary/50 backdrop-blur-sm rounded-[22px] overflow-hidden aspect-[4/3] flex flex-col items-center justify-center relative">
+                  {/* Card Content */}
+                  <h3 className="text-2xl md:text-3xl font-medium gradient-text mb-3">
+                    Generate
+                  </h3>
+                  <p className="text-muted-foreground text-sm mb-16">
+                    Start with a prompt and we'll take care of the rest
+                  </p>
+                  
+                  {/* Cursor Icon */}
+                  <div className="absolute bottom-12">
+                    <MousePointer className="w-6 h-6 text-muted-foreground/50" />
+                  </div>
+
+                  {/* Video Placeholder - Replace src with actual video */}
+                  <video 
+                    className="absolute inset-0 w-full h-full object-cover opacity-0 hover:opacity-100 transition-opacity duration-500"
+                    autoPlay 
+                    loop 
+                    muted 
+                    playsInline
+                  >
+                    {/* Add video source when available */}
+                    {/* <source src="/path-to-video.mp4" type="video/mp4" /> */}
+                  </video>
+                </div>
+              </div>
+            </div>
+
+            {/* Content */}
+            <div className="lg:pl-8">
+              <ScaleBadge variant="outline" className="mb-6">
+                <FileText className="w-3.5 h-3.5 mr-1.5" />
+                GENERATE
+              </ScaleBadge>
+              
+              <h2 className="text-3xl md:text-4xl lg:text-5xl font-medium tracking-tight leading-[1.15] mb-8">
+                Skip the blank page, create{" "}
+                <span className="gradient-text">brilliance</span> in a flash.
+              </h2>
+
+              <ul className="space-y-5 mb-10">
+                <li className="flex items-start gap-4">
+                  <div className="mt-1 w-5 h-5 rounded-md bg-violet-500/20 flex items-center justify-center flex-shrink-0">
+                    <FileText className="w-3 h-3 text-violet-400" />
+                  </div>
+                  <span className="text-muted-foreground">
+                    Start with an idea, paste in an outline, or import existing content
+                  </span>
+                </li>
+                <li className="flex items-start gap-4">
+                  <div className="mt-1 w-5 h-5 rounded-md bg-violet-500/20 flex items-center justify-center flex-shrink-0">
+                    <Palette className="w-3 h-3 text-violet-400" />
+                  </div>
+                  <span className="text-muted-foreground">
+                    20+ AI models for highest-quality output
+                  </span>
+                </li>
+                <li className="flex items-start gap-4">
+                  <div className="mt-1 w-5 h-5 rounded-md bg-violet-500/20 flex items-center justify-center flex-shrink-0">
+                    <RefreshCw className="w-3 h-3 text-violet-400" />
+                  </div>
+                  <span className="text-muted-foreground">
+                    Import your brand or use one of our 100+ themes
+                  </span>
+                </li>
+              </ul>
+
+              <ScaleButton variant="primary" size="lg">
+                Start for free
+              </ScaleButton>
+            </div>
           </div>
         </div>
       </section>
