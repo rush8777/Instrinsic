@@ -22,6 +22,7 @@ import {
 import { NetworkAnimation } from "@/components/scale/NetworkAnimation";
 import { LogoMarquee } from "@/components/scale/LogoMarquee";
 import { EditorPreview } from "@/components/scale/EditorPreview";
+import { ContainerTextFlip } from "@/components/ui/container-text-flip";
 
 const Index = () => {
   return (
@@ -49,7 +50,11 @@ const Index = () => {
             
             <h1 className="text-5xl md:text-6xl lg:text-7xl font-medium tracking-tight leading-[1.1] mb-6 opacity-0 animate-fade-in-up animation-delay-200">
               Build the future with{" "}
-              <span className="gradient-text">intelligent AI</span>
+              <ContainerTextFlip 
+                words={["intelligent AI", "smart tools", "modern code", "your vision"]}
+                interval={2500}
+                className="text-5xl md:text-6xl lg:text-7xl font-medium"
+              />
             </h1>
             
             <BodyLarge className="mb-10 max-w-2xl mx-auto opacity-0 animate-fade-in-up animation-delay-400">
