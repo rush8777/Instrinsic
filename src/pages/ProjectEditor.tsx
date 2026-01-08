@@ -1,13 +1,13 @@
-"// Project Editor Page"
+// Project Editor Page
 
 import React, { useState, useEffect, useCallback, useRef } from "react"
 import { useNavigate, useParams } from "react-router-dom"
 import { ProjectEditorSkeleton } from "@/components/scale/ProjectEditorSkeleton"
+import { EditorSidebar } from "@/components/scale/EditorSidebar"
 import { EditorLibrary } from "@/components/scale/EditorLibrary"
 import { EditorPlans } from "@/components/scale/EditorPlans"
 import { EditorStatus } from "@/components/scale/EditorStatus"
 import { EditorDocs } from "@/components/scale/EditorDocs"
-import { EditorSidebar } from "@/components/scale/EditorSidebar"
 import { SimpleHeader } from "@/components/scale/header"
 import { api } from "@/lib/api"
 import { toast } from "sonner"
@@ -37,6 +37,7 @@ interface Project {
 }
 
 export default function ProjectEditor() {
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false)
   const [project, setProject] = useState<Project | null>(null)
   const [loading, setLoading] = useState(true)
   const [generating, setGenerating] = useState(false)
@@ -160,9 +161,12 @@ export default function ProjectEditor() {
 
       {/* Main Content - Fixed height, no scroll */}
       <div className="flex flex-1 overflow-hidden">
-        {/* Sidebar */}
-        <EditorSidebar collapsed={false} onToggleCollapse={() => {}} />
-        
+        {/* Editor Sidebar */}
+        <EditorSidebar
+          collapsed={sidebarCollapsed}
+          onToggleCollapse={() => setSidebarCollapsed(!sidebarCollapsed)}
+        />
+
         {/* Section Content */}
         <div className="flex flex-1 flex-col min-w-0 overflow-hidden">
           {project && (

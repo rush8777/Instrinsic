@@ -24,6 +24,8 @@ import { LogoMarquee } from "@/components/scale/LogoMarquee";
 import { EditorPreview } from "@/components/scale/EditorPreview";
 import { ContainerTextFlip } from "@/components/ui/container-text-flip";
 import { PixelBlast } from "@/components/ui/pixel-blast";
+import { CapabilitiesGrid } from "@/components/ui/capabilities-grid";
+import { TextHoverEffect } from "@/components/ui/text-hover-effect";
 
 const Index = () => {
   return (
@@ -181,43 +183,51 @@ const Index = () => {
           </BodyLarge>
         </div>
         
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <FeatureCard
-            icon={<Zap className="w-5 h-5 text-foreground" />}
-            title="Lightning Fast Training"
-            description="Reduce training time by up to 10x with our optimized infrastructure and distributed computing capabilities."
-          />
-          <FeatureCard
-            icon={<Shield className="w-5 h-5 text-foreground" />}
-            title="Enterprise Security"
-            description="SOC 2 Type II certified with end-to-end encryption and comprehensive audit logging for compliance."
-          />
-          <FeatureCard
-            icon={<BarChart3 className="w-5 h-5 text-foreground" />}
-            title="Real-time Analytics"
-            description="Monitor model performance, track metrics, and gain insights with our comprehensive analytics dashboard."
-          />
-          <FeatureCard
-            icon={<Globe className="w-5 h-5 text-foreground" />}
-            title="Global Infrastructure"
-            description="Deploy models across 50+ regions worldwide with automatic failover and edge optimization."
-          />
-          <FeatureCard
-            icon={<Sparkles className="w-5 h-5 text-foreground" />}
-            title="Auto Model Optimization"
-            description="Our AI automatically optimizes your models for inference speed and cost efficiency."
-          />
-          <FeatureCard
-            icon={<Cpu className="w-5 h-5 text-foreground" />}
-            title="Custom Hardware"
-            description="Access to the latest GPU clusters including H100s, TPUs, and custom AI accelerators."
-          />
-        </div>
+        <CapabilitiesGrid
+          items={[
+            {
+              icon: <Zap className="w-5 h-5 text-foreground" />,
+              title: "Lightning Fast Training",
+              description: "Reduce training time by up to 10x with our optimized infrastructure and distributed computing capabilities."
+            },
+            {
+              icon: <Shield className="w-5 h-5 text-foreground" />,
+              title: "Enterprise Security",
+              description: "SOC 2 Type II certified with end-to-end encryption and comprehensive audit logging for compliance."
+            },
+            {
+              icon: <BarChart3 className="w-5 h-5 text-foreground" />,
+              title: "Real-time Analytics",
+              description: "Monitor model performance, track metrics, and gain insights with our comprehensive analytics dashboard."
+            },
+            {
+              icon: <Globe className="w-5 h-5 text-foreground" />,
+              title: "Global Infrastructure",
+              description: "Deploy models across 50+ regions worldwide with automatic failover and edge optimization."
+            },
+            {
+              icon: <Sparkles className="w-5 h-5 text-foreground" />,
+              title: "Auto Model Optimization",
+              description: "Our AI automatically optimizes your models for inference speed and cost efficiency."
+            },
+            {
+              icon: <Cpu className="w-5 h-5 text-foreground" />,
+              title: "Custom Hardware",
+              description: "Access to the latest GPU clusters including H100s, TPUs, and custom AI accelerators."
+            }
+          ]}
+        />
       </Section>
 
       {/* Stats Section */}
-      <section className="py-16 md:py-24 border-y border-border bg-secondary/30">
-        <div className="max-w-7xl mx-auto px-4 md:px-6">
+      <section className="relative py-16 md:py-24 border-y border-border bg-secondary/30 overflow-hidden">
+        {/* Background Text Hover Effect */}
+        <TextHoverEffect 
+          text="SCALE" 
+          variant="background" 
+          duration={0.15}
+        />
+        <div className="relative z-10 max-w-7xl mx-auto px-4 md:px-6">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             <StatsCard value="50B+" label="API Calls Monthly" />
             <StatsCard value="99.99%" label="Uptime SLA" />

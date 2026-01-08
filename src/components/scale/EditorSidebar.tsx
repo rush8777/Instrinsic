@@ -205,103 +205,72 @@ export function EditorSidebar({ collapsed, onToggleCollapse }: EditorSidebarProp
     })
   }
 
-  // Get the current section's data
-  const currentSection = sections.find(s => s.id === section) || sections[0]
-  const hasSubsections = currentSection.subsections && currentSection.subsections.length > 0
-
   return (
     <TooltipProvider delayDuration={0}>
       <div className="flex h-full">
-        {/* Tree panel showing only the active section's tree */}
+        {/* Tree panel only (small icon sidebar removed) */}
         <div className="w-56 bg-muted/30 border-r border-border h-full overflow-y-auto">
           <div className="py-2">
-            {/* Section header */}
-            <button
-              onClick={() => hasSubsections && toggleSection(currentSection.id)}
-              className="flex items-center gap-2 w-full px-3 py-1.5 text-sm font-medium transition-colors text-foreground"
-            >
-              {hasSubsections ? (
-                expandedSections.has(currentSection.id) ? (
-                  <ChevronDown className="w-4 h-4 flex-shrink-0" />
-                ) : (
-                  <ChevronRight className="w-4 h-4 flex-shrink-0" />
-                )
-              ) : (
-                <div className="w-4" />
-              )}
-              <span className="uppercase text-xs tracking-wider">{currentSection.label}</span>
-            </button>
+            {sections.map((sectionItem) => {
+              const isExpanded = expandedSections.has(sectionItem.id)
+              const hasSubsections = sectionItem.subsections && sectionItem.subsections.length > 0
 
-            {/* Section-specific content */}
-            {currentSection.id === "library" && (
-              <>
-                {hasSubsections && expandedSections.has(currentSection.id) && (
-                  <div className="mt-0.5">
-                    {currentSection.subsections!.map((sub) => (
-                      <TreeItem
-                        key={sub.id}
-                        item={sub}
-                        depth={1}
-                        expandedPaths={expandedPaths}
-                        togglePath={togglePath}
-                      />
-                    ))}
-                  </div>
-                )}
-              </>
-            )}
-
-            {currentSection.id === "plans" && (
-              <>
-                {/* New Plan button */}
-                <div className="px-3 py-2">
+              return (
+                <div key={sectionItem.id}>
+                  {/* Section header */}
                   <button
-                    className="w-full rounded-md bg-primary text-primary-foreground text-sm font-medium py-1.5 hover:bg-primary/90 transition-colors"
-                    onClick={() => {}}
+                    onClick={() => {
+                      if (hasSubsections) toggleSection(sectionItem.id)
+                      handleSectionClick(sectionItem.path)
+                    }}
+                    className={cn(
+                      "flex items-center gap-2 w-full px-3 py-1.5 text-sm font-medium transition-colors",
+                      section === sectionItem.id
+                        ? "text-foreground bg-muted/50"
+                        : "text-muted-foreground hover:text-foreground hover:bg-muted/30"
+                    )}
                   >
-                    New Plan
+                    {hasSubsections ? (
+                      isExpanded ? (
+                        <ChevronDown className="w-4 h-4 flex-shrink-0" />
+                      ) : (
+                        <ChevronRight className="w-4 h-4 flex-shrink-0" />
+                      )
+                    ) : (
+                      <div className="w-4" />
+                    )}
+                    <span className="uppercase text-xs tracking-wider">{sectionItem.label}</span>
                   </button>
+
+                  {/* Plans-only action */}
+                  {sectionItem.id === "plans" && (
+                    <div className="px-3 pb-2">
+                      <button
+                        className="w-full rounded-md bg-primary text-primary-foreground text-sm font-medium py-1.5 hover:bg-primary/90 transition-colors"
+                        onClick={() => {}}
+                      >
+                        New Plan
+                      </button>
+                    </div>
+                  )}
+
+                  {/* Subsections */}
+                  {hasSubsections && isExpanded && (
+                    <div className="mt-0.5">
+                      {sectionItem.subsections!.map((sub) => (
+                        <TreeItem
+                          key={sub.id}
+                          item={sub}
+                          depth={1}
+                          expandedPaths={expandedPaths}
+                          togglePath={togglePath}
+                        />
+                      ))}
+                    </div>
+                  )}
                 </div>
-                {/* History subsection */}
-                {hasSubsections && expandedSections.has(currentSection.id) && (
-                  <div className="mt-0.5">
-                    {currentSection.subsections!.map((sub) => (
-                      <TreeItem
-                        key={sub.id}
-                        item={sub}
-                        depth={1}
-                        expandedPaths={expandedPaths}
-                        togglePath={togglePath}
-                      />
-                    ))}
-                  </div>
-                )}
-              </>
-            )}
-
-            {currentSection.id === "status" && (
-              <div className="px-3 py-2 text-sm text-muted-foreground">
-                {/* Status has no tree, just displays status content */}
-              </div>
-            )}
-
-            {currentSection.id === "docs" && (
-              <>
-                {hasSubsections && expandedSections.has(currentSection.id) && (
-                  <div className="mt-0.5">
-                    {currentSection.subsections!.map((sub) => (
-                      <TreeItem
-                        key={sub.id}
-                        item={sub}
-                        depth={1}
-                        expandedPaths={expandedPaths}
-                        togglePath={togglePath}
-                      />
-                    ))}
-                  </div>
-                )}
-              </>
-            )}
+              )
+            })}
           </div>
         </div>
       </div>

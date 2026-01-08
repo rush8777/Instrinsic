@@ -2,6 +2,7 @@ import { cn } from "@/lib/utils"
 import type { ReactNode } from "react"
 import { Overline, H2, BodyLarge } from "./typography"
 import { ScaleButton } from "./buttons"
+import { TextHoverEffect } from "@/components/ui/text-hover-effect"
 
 interface SectionProps {
   children: ReactNode
@@ -64,8 +65,14 @@ interface CTASectionProps {
 
 export function CTASection({ overline, title, description, cta, className }: CTASectionProps) {
   return (
-    <section className={cn("py-16 md:py-24 text-center", className)}>
-      <div className="max-w-7xl mx-auto px-4 md:px-6">
+    <section className={cn("relative py-16 md:py-24 text-center overflow-hidden", className)}>
+      {/* Background Text Hover Effect */}
+      <TextHoverEffect 
+        text="BUILD" 
+        variant="background" 
+        duration={0.15}
+      />
+      <div className="relative z-10 max-w-7xl mx-auto px-4 md:px-6">
         <div className="max-w-2xl mx-auto">
           {overline && <Overline className="mb-4">{overline}</Overline>}
           <H2 className="mb-4">{title}</H2>
