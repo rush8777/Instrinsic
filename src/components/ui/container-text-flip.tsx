@@ -51,11 +51,12 @@ export function ContainerTextFlip({
             duration: animationDuration / 1000,
             ease: "easeInOut",
           }}
-          className={cn("inline-block gradient-text whitespace-nowrap", textClassName)}
+          className="inline-block whitespace-nowrap"
         >
           {currentWord.split("").map((letter, index) => (
             <motion.span
               key={index}
+              className={cn("gradient-text", textClassName)}
               initial={{ opacity: 0, filter: "blur(10px)" }}
               animate={{ opacity: 1, filter: "blur(0px)" }}
               transition={{ delay: index * 0.02 }}
