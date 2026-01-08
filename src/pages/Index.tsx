@@ -23,6 +23,7 @@ import { NetworkAnimation } from "@/components/scale/NetworkAnimation";
 import { LogoMarquee } from "@/components/scale/LogoMarquee";
 import { EditorPreview } from "@/components/scale/EditorPreview";
 import { ContainerTextFlip } from "@/components/ui/container-text-flip";
+import { PixelBlast } from "@/components/ui/pixel-blast";
 
 const Index = () => {
   return (
@@ -227,44 +228,62 @@ const Index = () => {
       </section>
 
       {/* Highlight Feature Section */}
-      <Section>
-        <div className="grid lg:grid-cols-2 gap-12 items-center">
-          <div>
-            <Overline>Data Engine</Overline>
-            <H2 className="mb-6">The foundation for world-class AI</H2>
-            <BodyLarge className="mb-8">
-              Our Data Engine combines human expertise with machine learning to create the highest quality training data at scale. Accelerate your AI development with data you can trust.
-            </BodyLarge>
-            <ul className="space-y-4 mb-8">
-              {[
-                "Human-in-the-loop data labeling",
-                "Automated quality assurance",
-                "Custom annotation workflows",
-                "Real-time collaboration tools"
-              ].map((item, i) => (
-                <li key={i} className="flex items-center gap-3 text-muted-foreground">
-                  <div className="w-1.5 h-1.5 rounded-full bg-violet-400" />
-                  {item}
-                </li>
-              ))}
-            </ul>
-            <ScaleButton variant="outline" withArrow>
-              Explore Data Engine
-            </ScaleButton>
-          </div>
-          
-          <HighlightCard className="h-full">
-            <div className="aspect-square bg-gradient-to-br from-violet-500/10 via-transparent to-blue-500/10 rounded-lg flex items-center justify-center">
-              <div className="text-center">
-                <div className="inline-flex items-center justify-center w-16 h-16 rounded-xl bg-secondary mb-4">
-                  <Sparkles className="w-8 h-8 text-foreground" />
-                </div>
-                <p className="text-muted-foreground">Data Pipeline Visualization</p>
-              </div>
+      <section className="relative py-16 md:py-24 overflow-hidden">
+        {/* PixelBlast Background */}
+        <PixelBlast 
+          variant="circle"
+          color="hsl(263, 70%, 50%)"
+          pixelSize={4}
+          patternScale={3}
+          patternDensity={0.8}
+          speed={0.3}
+          edgeFade={0.4}
+          enableRipples={true}
+          rippleSpeed={0.25}
+          rippleThickness={0.15}
+          className="z-0"
+        />
+        
+        {/* Content Overlay */}
+        <div className="relative z-10 max-w-7xl mx-auto px-4 md:px-6">
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            <div>
+              <Overline>Data Engine</Overline>
+              <H2 className="mb-6">The foundation for world-class AI</H2>
+              <BodyLarge className="mb-8">
+                Our Data Engine combines human expertise with machine learning to create the highest quality training data at scale. Accelerate your AI development with data you can trust.
+              </BodyLarge>
+              <ul className="space-y-4 mb-8">
+                {[
+                  "Human-in-the-loop data labeling",
+                  "Automated quality assurance",
+                  "Custom annotation workflows",
+                  "Real-time collaboration tools"
+                ].map((item, i) => (
+                  <li key={i} className="flex items-center gap-3 text-muted-foreground">
+                    <div className="w-1.5 h-1.5 rounded-full bg-violet-400" />
+                    {item}
+                  </li>
+                ))}
+              </ul>
+              <ScaleButton variant="outline" withArrow>
+                Explore Data Engine
+              </ScaleButton>
             </div>
-          </HighlightCard>
+            
+            <HighlightCard className="h-full backdrop-blur-sm bg-card/80">
+              <div className="aspect-square bg-gradient-to-br from-violet-500/10 via-transparent to-blue-500/10 rounded-lg flex items-center justify-center">
+                <div className="text-center">
+                  <div className="inline-flex items-center justify-center w-16 h-16 rounded-xl bg-secondary mb-4">
+                    <Sparkles className="w-8 h-8 text-foreground" />
+                  </div>
+                  <p className="text-muted-foreground">Data Pipeline Visualization</p>
+                </div>
+              </div>
+            </HighlightCard>
+          </div>
         </div>
-      </Section>
+      </section>
 
       {/* CTA Section */}
       <CTASection
