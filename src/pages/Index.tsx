@@ -52,7 +52,7 @@ const Index = () => {
             </div>
             
             <h1 className="text-5xl md:text-6xl lg:text-7xl font-medium tracking-tight leading-[1.1] mb-6 opacity-0 animate-fade-in-up animation-delay-200">
-              Build the future with{" "}
+              Track the future with {" "}
               <ContainerTextFlip 
                 words={["intelligent AI", "smart tools", "modern code", "your vision"]}
                 interval={2500}
