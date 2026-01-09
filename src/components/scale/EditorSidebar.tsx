@@ -17,6 +17,7 @@ import {
   File
 } from "lucide-react"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
+import { HighlightCard } from "@/components/scale/cards"
 
 interface EditorSidebarProps {
   collapsed: boolean
@@ -329,23 +330,25 @@ export function EditorSidebar({ collapsed, onToggleCollapse }: EditorSidebarProp
             )}
 
             {/* Tree view for active section */}
-            {activeSubsections.length > 0 ? (
-              <div className="space-y-0.5">
-                {activeSubsections.map((sub) => (
-                  <TreeItem
-                    key={sub.id}
-                    item={sub}
-                    depth={0}
-                    expandedPaths={expandedPaths}
-                    togglePath={togglePath}
-                  />
-                ))}
-              </div>
-            ) : (
-              <div className="text-xs text-muted-foreground text-center py-4">
-                No items yet
-              </div>
-            )}
+            <HighlightCard className="p-3">
+              {activeSubsections.length > 0 ? (
+                <div className="space-y-0.5">
+                  {activeSubsections.map((sub) => (
+                    <TreeItem
+                      key={sub.id}
+                      item={sub}
+                      depth={0}
+                      expandedPaths={expandedPaths}
+                      togglePath={togglePath}
+                    />
+                  ))}
+                </div>
+              ) : (
+                <div className="text-xs text-muted-foreground text-center py-2">
+                  No items yet
+                </div>
+              )}
+            </HighlightCard>
           </div>
         </div>
       </div>
