@@ -231,68 +231,73 @@ export function EditorSidebar({ collapsed, onToggleCollapse }: EditorSidebarProp
 
   return (
     <TooltipProvider delayDuration={0}>
-      <div className="flex h-full">
-        {/* Icon rail for section switching */}
-        <div className="w-12 bg-background border-r border-border h-full flex flex-col items-center py-3 gap-1">
-          {/* Top navigation icons */}
-          {topIcons.map((item) => (
-            <Tooltip key={item.id}>
-              <TooltipTrigger asChild>
-                <button
-                  onClick={() => handleIconClick(item)}
-                  className="p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-colors"
-                >
-                  {item.icon}
-                </button>
-              </TooltipTrigger>
-              <TooltipContent side="right" className="text-xs">
-                {item.label}
-              </TooltipContent>
-            </Tooltip>
-          ))}
-          
-          <div className="w-6 h-px bg-border my-2" />
-          
-          {/* Section icons */}
-          {sections.map((sectionItem) => (
-            <Tooltip key={sectionItem.id}>
-              <TooltipTrigger asChild>
-                <button
-                  onClick={() => handleSectionClick(sectionItem.path)}
-                  className={cn(
-                    "p-2 rounded-lg transition-colors",
-                    section === sectionItem.id
-                      ? "text-primary bg-primary/10"
-                      : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
-                  )}
-                >
-                  {sectionItem.icon}
-                </button>
-              </TooltipTrigger>
-              <TooltipContent side="right" className="text-xs">
-                {sectionItem.label}
-              </TooltipContent>
-            </Tooltip>
-          ))}
-          
-          <div className="flex-1" />
-          
-          {/* Bottom icons */}
-          {bottomIcons.map((item) => (
-            <Tooltip key={item.id}>
-              <TooltipTrigger asChild>
-                <button
-                  onClick={() => handleIconClick(item)}
-                  className="p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-colors"
-                >
-                  {item.icon}
-                </button>
-              </TooltipTrigger>
-              <TooltipContent side="right" className="text-xs">
-                {item.label}
-              </TooltipContent>
-            </Tooltip>
-          ))}
+      <div className="relative h-full">
+        {/* Hover edge + icon rail for section switching (overlays tree view) */}
+        <div className="absolute inset-y-0 left-0 group z-30">
+          {/* Thin hover zone at the very left edge that reveals the sidebar */}
+          <div className="absolute inset-y-0 left-0 w-1 cursor-pointer z-20" />
+
+          <div className="w-12 bg-background border-r border-border h-full flex flex-col items-center py-3 gap-1 opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto transition-opacity duration-200">
+            {/* Top navigation icons */}
+            {topIcons.map((item) => (
+              <Tooltip key={item.id}>
+                <TooltipTrigger asChild>
+                  <button
+                    onClick={() => handleIconClick(item)}
+                    className="p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-colors"
+                  >
+                    {item.icon}
+                  </button>
+                </TooltipTrigger>
+                <TooltipContent side="right" className="text-xs">
+                  {item.label}
+                </TooltipContent>
+              </Tooltip>
+            ))}
+            
+            <div className="w-6 h-px bg-border my-2" />
+            
+            {/* Section icons */}
+            {sections.map((sectionItem) => (
+              <Tooltip key={sectionItem.id}>
+                <TooltipTrigger asChild>
+                  <button
+                    onClick={() => handleSectionClick(sectionItem.path)}
+                    className={cn(
+                      "p-2 rounded-lg transition-colors",
+                      section === sectionItem.id
+                        ? "text-primary bg-primary/10"
+                        : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
+                    )}
+                  >
+                    {sectionItem.icon}
+                  </button>
+                </TooltipTrigger>
+                <TooltipContent side="right" className="text-xs">
+                  {sectionItem.label}
+                </TooltipContent>
+              </Tooltip>
+            ))}
+            
+            <div className="flex-1" />
+            
+            {/* Bottom icons */}
+            {bottomIcons.map((item) => (
+              <Tooltip key={item.id}>
+                <TooltipTrigger asChild>
+                  <button
+                    onClick={() => handleIconClick(item)}
+                    className="p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-colors"
+                  >
+                    {item.icon}
+                  </button>
+                </TooltipTrigger>
+                <TooltipContent side="right" className="text-xs">
+                  {item.label}
+                </TooltipContent>
+              </Tooltip>
+            ))}
+          </div>
         </div>
 
         {/* Section-specific tree panel */}
