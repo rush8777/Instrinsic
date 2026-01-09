@@ -87,11 +87,31 @@ const docsSubsections: SubsectionItem[] = [
   { id: "readme", label: "README.md", type: "file" },
 ]
 
+const statusSubsections: SubsectionItem[] = [
+  {
+    id: "tasks",
+    label: "Tasks",
+    type: "folder",
+    children: [
+      { id: "pending", label: "Pending", type: "file" },
+      { id: "in-progress", label: "In Progress", type: "file" },
+      { id: "completed", label: "Completed", type: "file" },
+    ],
+  },
+]
+
+const sectionSubsections: Record<string, SubsectionItem[]> = {
+  library: librarySubsections,
+  plans: plansSubsections,
+  status: statusSubsections,
+  docs: docsSubsections,
+}
+
 const sections: SectionItem[] = [
-  { id: "library", label: "Library", icon: <BookOpen className="w-5 h-5" />, path: "library", subsections: librarySubsections },
-  { id: "plans", label: "Plans", icon: <MessageSquare className="w-5 h-5" />, path: "plans", subsections: plansSubsections },
+  { id: "library", label: "Library", icon: <BookOpen className="w-5 h-5" />, path: "library" },
+  { id: "plans", label: "Plans", icon: <MessageSquare className="w-5 h-5" />, path: "plans" },
   { id: "status", label: "Status", icon: <CheckSquare className="w-5 h-5" />, path: "status" },
-  { id: "docs", label: "Docs", icon: <FileCode className="w-5 h-5" />, path: "docs", subsections: docsSubsections },
+  { id: "docs", label: "Docs", icon: <FileCode className="w-5 h-5" />, path: "docs" },
 ]
 
 const topIcons = [
@@ -205,72 +225,122 @@ export function EditorSidebar({ collapsed, onToggleCollapse }: EditorSidebarProp
     })
   }
 
+  // Get active section data
+  const activeSection = sections.find(s => s.id === section) || sections[0]
+  const activeSubsections = sectionSubsections[section] || []
+
   return (
     <TooltipProvider delayDuration={0}>
       <div className="flex h-full">
-        {/* Tree panel only (small icon sidebar removed) */}
-        <div className="w-56 bg-muted/30 border-r border-border h-full overflow-y-auto">
-          <div className="py-2">
-            {sections.map((sectionItem) => {
-              const isExpanded = expandedSections.has(sectionItem.id)
-              const hasSubsections = sectionItem.subsections && sectionItem.subsections.length > 0
-
-              return (
-                <div key={sectionItem.id}>
-                  {/* Section header */}
-                  <button
-                    onClick={() => {
-                      if (hasSubsections) toggleSection(sectionItem.id)
-                      handleSectionClick(sectionItem.path)
-                    }}
-                    className={cn(
-                      "flex items-center gap-2 w-full px-3 py-1.5 text-sm font-medium transition-colors",
-                      section === sectionItem.id
-                        ? "text-foreground bg-muted/50"
-                        : "text-muted-foreground hover:text-foreground hover:bg-muted/30"
-                    )}
-                  >
-                    {hasSubsections ? (
-                      isExpanded ? (
-                        <ChevronDown className="w-4 h-4 flex-shrink-0" />
-                      ) : (
-                        <ChevronRight className="w-4 h-4 flex-shrink-0" />
-                      )
-                    ) : (
-                      <div className="w-4" />
-                    )}
-                    <span className="uppercase text-xs tracking-wider">{sectionItem.label}</span>
-                  </button>
-
-                  {/* Plans-only action */}
-                  {sectionItem.id === "plans" && (
-                    <div className="px-3 pb-2">
-                      <button
-                        className="w-full rounded-md bg-primary text-primary-foreground text-sm font-medium py-1.5 hover:bg-primary/90 transition-colors"
-                        onClick={() => {}}
-                      >
-                        New Plan
-                      </button>
-                    </div>
+        {/* Icon rail for section switching */}
+        <div className="w-12 bg-background border-r border-border h-full flex flex-col items-center py-3 gap-1">
+          {/* Top navigation icons */}
+          {topIcons.map((item) => (
+            <Tooltip key={item.id}>
+              <TooltipTrigger asChild>
+                <button
+                  onClick={() => handleIconClick(item)}
+                  className="p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-colors"
+                >
+                  {item.icon}
+                </button>
+              </TooltipTrigger>
+              <TooltipContent side="right" className="text-xs">
+                {item.label}
+              </TooltipContent>
+            </Tooltip>
+          ))}
+          
+          <div className="w-6 h-px bg-border my-2" />
+          
+          {/* Section icons */}
+          {sections.map((sectionItem) => (
+            <Tooltip key={sectionItem.id}>
+              <TooltipTrigger asChild>
+                <button
+                  onClick={() => handleSectionClick(sectionItem.path)}
+                  className={cn(
+                    "p-2 rounded-lg transition-colors",
+                    section === sectionItem.id
+                      ? "text-primary bg-primary/10"
+                      : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
                   )}
+                >
+                  {sectionItem.icon}
+                </button>
+              </TooltipTrigger>
+              <TooltipContent side="right" className="text-xs">
+                {sectionItem.label}
+              </TooltipContent>
+            </Tooltip>
+          ))}
+          
+          <div className="flex-1" />
+          
+          {/* Bottom icons */}
+          {bottomIcons.map((item) => (
+            <Tooltip key={item.id}>
+              <TooltipTrigger asChild>
+                <button
+                  onClick={() => handleIconClick(item)}
+                  className="p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-colors"
+                >
+                  {item.icon}
+                </button>
+              </TooltipTrigger>
+              <TooltipContent side="right" className="text-xs">
+                {item.label}
+              </TooltipContent>
+            </Tooltip>
+          ))}
+        </div>
 
-                  {/* Subsections */}
-                  {hasSubsections && isExpanded && (
-                    <div className="mt-0.5">
-                      {sectionItem.subsections!.map((sub) => (
-                        <TreeItem
-                          key={sub.id}
-                          item={sub}
-                          depth={1}
-                          expandedPaths={expandedPaths}
-                          togglePath={togglePath}
-                        />
-                      ))}
-                    </div>
-                  )}
-                </div>
-              )
-            })}
+        {/* Section-specific tree panel */}
+        <div className="w-48 bg-muted/30 border-r border-border h-full overflow-y-auto">
+          <div className="py-3 px-2">
+            {/* Section header */}
+            <div className="flex items-center gap-2 px-2 pb-3 border-b border-border/50 mb-3">
+              <span className="text-primary">{activeSection.icon}</span>
+              <span className="font-semibold text-sm text-foreground">{activeSection.label}</span>
+            </div>
+
+            {/* Section-specific action button */}
+            {section === "plans" && (
+              <button
+                className="w-full rounded-md bg-primary text-primary-foreground text-sm font-medium py-2 mb-3 hover:bg-primary/90 transition-colors"
+                onClick={() => {}}
+              >
+                + New Plan
+              </button>
+            )}
+            
+            {section === "library" && (
+              <button
+                className="w-full rounded-md bg-primary/10 text-primary text-sm font-medium py-2 mb-3 hover:bg-primary/20 transition-colors border border-primary/20"
+                onClick={() => {}}
+              >
+                Initialize Prompts
+              </button>
+            )}
+
+            {/* Tree view for active section */}
+            {activeSubsections.length > 0 ? (
+              <div className="space-y-0.5">
+                {activeSubsections.map((sub) => (
+                  <TreeItem
+                    key={sub.id}
+                    item={sub}
+                    depth={0}
+                    expandedPaths={expandedPaths}
+                    togglePath={togglePath}
+                  />
+                ))}
+              </div>
+            ) : (
+              <div className="text-xs text-muted-foreground text-center py-4">
+                No items yet
+              </div>
+            )}
           </div>
         </div>
       </div>
