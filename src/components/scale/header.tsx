@@ -44,7 +44,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { IconButton } from "./buttons"
-import { HoverSidebar } from "./HoverSidebar"
+
 
 
 interface NavItem {
@@ -324,9 +324,6 @@ export function SimpleHeader({
 }) {
   const { isAuthenticated, user, logout } = useAuth()
   const navigate = useNavigate()
-  const [sidebarVisible, setSidebarVisible] = useState(false)
-  const hideTimeoutRef = React.useRef<ReturnType<typeof setTimeout> | null>(null)
-
   const handleLogout = () => {
     logout()
     navigate("/")
@@ -336,71 +333,32 @@ export function SimpleHeader({
     return email.substring(0, 2).toUpperCase()
   }
 
-  const handleMouseEnter = () => {
-    if (hideTimeoutRef.current) {
-      clearTimeout(hideTimeoutRef.current)
-      hideTimeoutRef.current = null
-    }
-    setSidebarVisible(true)
-  }
-
-  const handleMouseLeave = () => {
-    hideTimeoutRef.current = setTimeout(() => {
-      setSidebarVisible(false)
-    }, 200) // Small delay to allow moving mouse to sidebar
-  }
-
-  React.useEffect(() => {
-    return () => {
-      if (hideTimeoutRef.current) {
-        clearTimeout(hideTimeoutRef.current)
-      }
-    }
-  }, [])
-
   return (
-    <>
-      {/* Invisible hover zone to reveal the sidebar when moving to the far left */}
-      <div
-        className="fixed inset-y-0 left-0 w-2 z-40"
-        onMouseEnter={handleMouseEnter}
-        onMouseLeave={handleMouseLeave}
-        aria-hidden="true"
-      />
-      <HoverSidebar 
-        isVisible={sidebarVisible}
-        onMouseEnter={handleMouseEnter}
-        onMouseLeave={handleMouseLeave}
-      />
-      <header className={cn("border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/70", className)}>
-        <div className="flex items-center justify-between h-14 px-4 md:px-6 gap-4">
-          <div 
-            className="flex items-center gap-3 min-w-0"
-            onMouseEnter={handleMouseEnter}
-            onMouseLeave={handleMouseLeave}
-          >
-            {logo ? (
-              <div className="flex items-center justify-center h-9 w-9 rounded-xl bg-secondary text-foreground">
-                {logo}
-              </div>
-            ) : (
-              <div className="flex items-center justify-center h-9 w-9 rounded-xl bg-gradient-to-br from-amber-500 via-fuchsia-500 to-indigo-500 text-background font-semibold">
-                b
-              </div>
-            )}
-
-            <div className="flex flex-col min-w-0">
-              <div className="flex items-center gap-2 min-w-0">
-                <span className="text-sm font-semibold text-foreground truncate">
-                  {projectName || "Advanced React NPM Live Editor"}
-                </span>
-                <Lock className="w-4 h-4 text-muted-foreground flex-shrink-0" />
-              </div>
-              <span className="text-xs text-muted-foreground truncate">
-                {projectStatus || "Previewing last saved version"}
-              </span>
+    <header className={cn("border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/70", className)}>
+      <div className="flex items-center justify-between h-14 px-4 md:px-6 gap-4">
+        <div className="flex items-center gap-3 min-w-0">
+          {logo ? (
+            <div className="flex items-center justify-center h-9 w-9 rounded-xl bg-secondary text-foreground">
+              {logo}
             </div>
+          ) : (
+            <div className="flex items-center justify-center h-9 w-9 rounded-xl bg-gradient-to-br from-amber-500 via-fuchsia-500 to-indigo-500 text-background font-semibold">
+              b
+            </div>
+          )}
+
+          <div className="flex flex-col min-w-0">
+            <div className="flex items-center gap-2 min-w-0">
+              <span className="text-sm font-semibold text-foreground truncate">
+                {projectName || "Advanced React NPM Live Editor"}
+              </span>
+              <Lock className="w-4 h-4 text-muted-foreground flex-shrink-0" />
+            </div>
+            <span className="text-xs text-muted-foreground truncate">
+              {projectStatus || "Previewing last saved version"}
+            </span>
           </div>
+        </div>
 
           <div className="hidden lg:flex items-center justify-center gap-2 text-xs text-muted-foreground flex-1">
             <span>Preview mode</span>
@@ -485,7 +443,6 @@ export function SimpleHeader({
             )}
           </div>
         </div>
-      </header>
-    </>
+    </header>
   )
 }
