@@ -1,26 +1,56 @@
 import { cn } from "@/lib/utils"
 import { File, Folder, ChevronRight, Search, MoreVertical } from "lucide-react"
+import { motion, useMotionValue, useSpring, useTransform } from "framer-motion"
+import { useRef } from "react"
 
 interface EditorPreviewProps {
   className?: string
 }
 
 export function EditorPreview({ className }: EditorPreviewProps) {
+  const ref = useRef<HTMLDivElement>(null)
+  
+  const x = useMotionValue(0.5)
+  const y = useMotionValue(0.5)
+  
+  const springConfig = { damping: 20, stiffness: 150 }
+  const xSpring = useSpring(x, springConfig)
+  const ySpring = useSpring(y, springConfig)
+  
+  const rotateX = useTransform(ySpring, [0, 1], [8, -8])
+  const rotateY = useTransform(xSpring, [0, 1], [-12, 12])
+  
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!ref.current) return
+    const rect = ref.current.getBoundingClientRect()
+    const xPos = (e.clientX - rect.left) / rect.width
+    const yPos = (e.clientY - rect.top) / rect.height
+    x.set(xPos)
+    y.set(yPos)
+  }
+  
+  const handleMouseLeave = () => {
+    x.set(0.5)
+    y.set(0.5)
+  }
+
   return (
     <div 
+      ref={ref}
       className={cn(
         "relative w-full max-w-4xl mx-auto",
         className
       )}
-      style={{
-        perspective: "1000px"
-      }}
+      style={{ perspective: "1000px" }}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
     >
       {/* Tilted container */}
-      <div 
+      <motion.div 
         className="relative rounded-2xl border border-border/50 bg-card/80 backdrop-blur-xl shadow-2xl overflow-hidden"
         style={{
-          transform: "rotateX(8deg) rotateY(-8deg) rotateZ(2deg)",
+          rotateX,
+          rotateY,
           transformStyle: "preserve-3d"
         }}
       >
@@ -150,10 +180,16 @@ export function EditorPreview({ className }: EditorPreviewProps) {
             </div>
           </div>
         </div>
-      </div>
+      </motion.div>
 
       {/* Decorative glow */}
-      <div className="absolute -inset-4 bg-gradient-to-br from-violet-500/20 via-transparent to-blue-500/20 blur-3xl -z-10" />
+      <motion.div 
+        className="absolute -inset-4 bg-gradient-to-br from-violet-500/20 via-transparent to-blue-500/20 blur-3xl -z-10"
+        style={{
+          rotateX,
+          rotateY,
+        }}
+      />
     </div>
   )
 }
